@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   instructionHeaderText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     color: "#4B5563",
     fontFamily: "Inter",
@@ -413,8 +413,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stepNumber: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: 12,
+    fontWeight: "600",
     color: "#FFFFFF",
     fontFamily: "Inter",
   },
@@ -425,14 +425,15 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   instructionTitle: {
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#111827",
     marginBottom: 4,
     fontFamily: "Inter",
   },
   instructionDescription: {
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: "400",
     color: "#6B7280",
     lineHeight: 18,
     fontFamily: "Inter",

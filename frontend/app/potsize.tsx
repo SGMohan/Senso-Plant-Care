@@ -475,6 +475,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "Inter",
   },
   potNameActive: {
     color: "#000000",
@@ -486,6 +487,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 12,
     fontWeight: "400",
+    fontFamily: "Inter",
   },
   potMeasurementActive: {
     color: "#6B7280",
@@ -531,12 +533,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#1F1F1F",
     marginBottom: 4,
+    fontFamily: "Inter",
   },
   recommendationText: {
     fontSize: 12,
     fontWeight: "400",
     color: "#868686",
     lineHeight: 19,
+    fontFamily: "Inter",
   },
 
   // Bottom Button
