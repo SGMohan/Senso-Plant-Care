@@ -498,6 +498,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "700",
     color: "#111827",
+    fontFamily: "Inter",
   },
   chip: {
     marginTop: 8,
@@ -510,6 +511,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: PRIMARY_GREEN,
     fontWeight: "600",
+    fontFamily: "Inter",
   },
 
   // scanner
@@ -632,6 +634,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#94A3B8",
     textAlign: "center",
+    fontFamily: "Inter",
   },
 
   // bottom controls card
@@ -676,6 +679,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#FFFFFF",
+    fontFamily: "Roboto",
   },
 
   // permission states
@@ -691,12 +695,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#374151",
     textAlign: "center",
+    fontFamily: "Inter",
   },
   permissionSubtext: {
     fontSize: 14,
     color: "#6B7280",
     textAlign: "center",
     marginTop: 8,
+    fontFamily: "Inter",
   },
   permissionButton: {
     marginTop: 16,
@@ -709,5 +715,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: "Roboto",
   },
 });

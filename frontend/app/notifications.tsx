@@ -339,8 +339,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: "#111827",
     fontFamily: "Inter",
   },
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 16,
     color: "#6b7280",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   emptyState: {
     alignItems: "center",
@@ -385,6 +385,6 @@ const styles = StyleSheet.create({
     color: "#6b8a7a",
     textAlign: "center",
     lineHeight: 24,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
 });

@@ -139,13 +139,11 @@ export default function DashboardScreen() {
     // TODO: Handle app state changes (background/foreground)
   }, []);
 
-
-
   return (
-    <LinearGradient 
-      colors={["#EBF3E8", "#D1EBD7"]} 
-      start={{ x: 0, y: 0 }} 
-      end={{ x: 0, y: 1 }} 
+    <LinearGradient
+      colors={["#EBF3E8", "#D1EBD7"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
       style={styles.safeArea}
     >
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -184,8 +182,12 @@ export default function DashboardScreen() {
           </ScrollView>
         </View>
 
-        {/* Plants Overview Header - MATCHING THE IMAGE */}
-        <View style={styles.plantsOverviewSection}>
+        {/* Plants Overview Header - CLICKABLE */}
+        <TouchableOpacity
+          style={styles.plantsOverviewSection}
+          onPress={() => router.push("/myplants" as any)}
+          activeOpacity={0.7}
+        >
           <View style={styles.plantsOverviewHeader}>
             <View style={styles.plantsOverviewLeft}>
               <Text style={styles.plantsOverviewMainText}>5 Plants</Text>
@@ -210,7 +212,7 @@ export default function DashboardScreen() {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         {/* Filter Tabs */}
         <View style={styles.filterContainer}>
@@ -274,7 +276,12 @@ export default function DashboardScreen() {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <BottomNavigation activeTab={activeTab} setActiveTab={(tab) => {
+        setActiveTab(tab);
+        if (tab === "home") {
+          router.push("/myplants");
+        }
+      }} />
     </LinearGradient>
   );
 }
@@ -339,7 +346,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  /* ===== UPDATED PLANTS OVERVIEW STYLES TO MATCH IMAGE ===== */
+  /* ===== CLICKABLE PLANTS OVERVIEW STYLES ===== */
   plantsOverviewSection: {
     paddingHorizontal: 16,
     marginBottom: 8,
@@ -366,7 +373,7 @@ const styles = StyleSheet.create({
   plantsOverviewSubText: {
     fontSize: 16,
     color: "#666666",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
     fontWeight: "400",
     marginTop: 2,
   },
@@ -395,10 +402,10 @@ const styles = StyleSheet.create({
   plantsOverviewStatLabel: {
     fontSize: 14,
     color: "#666666",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
     fontWeight: "400",
   },
-  /* ===== END OF UPDATED STYLES ===== */
+  /* ===== END OF PLANTS OVERVIEW STYLES ===== */
 
   filterContainer: {
     flexDirection: "row",
@@ -414,7 +421,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: "#000",
+    borderColor: "#4C4C4C",
     alignItems: "center",
   },
   filterButtonActive: {
@@ -422,8 +429,8 @@ const styles = StyleSheet.create({
     borderColor: "#2d5a3d",
   },
   filterText: {
-    fontSize: 16,
-    color: "#000",
+    fontSize: 14,
+    color: "#4C4C4C",
     fontWeight: "500",
     fontFamily: "Roboto",
   },

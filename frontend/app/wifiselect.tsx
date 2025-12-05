@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#6b7280",
     marginBottom: 24,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   wifiSelectionContainer: {
     flexDirection: "row",
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   wifiLabel: {
     fontSize: 16,
     color: "#1a3c2a",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   selectButton: {
     paddingHorizontal: 12,
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     color: "#1a3c2a",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   eyeButton: {
     padding: 4,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#1a3c2a",
     marginLeft: 12,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   spacer: {
     height: 100,
@@ -405,6 +405,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ffffff",
-    fontFamily: "Inter",
+    fontFamily: "Roboto",
   },
 });

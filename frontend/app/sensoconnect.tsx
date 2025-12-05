@@ -345,15 +345,15 @@ const styles = StyleSheet.create({
   instructionTitle: {
     fontSize: 24,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: "#000000",
     marginBottom: 10,
     fontFamily: "Inter",
   },
   instructionText: {
-    fontSize: 16,
-    color: "#666666",
+    fontSize: 14,
+    color: "#4C4C4C",
     lineHeight: 22,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   spacer: {
     flex: 1,

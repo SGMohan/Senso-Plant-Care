@@ -106,8 +106,9 @@ export default function SelectPotSizeScreen() {
     // - Navigate to next step or dashboard upon completion
     //
     console.log("Continue with pot size:", selectedSize);
-    // TODO: Navigate to next screen or dashboard after successful save
-    // router.push('/dashboard');
+    // TEMP NAVIGATION: Go to soil type selection after confirming pot size
+    // Replace this with backend save + proper flow when API is ready
+    router.push("/soiltype");
   };
 
   const getSizeLabel = () => {
@@ -188,6 +189,7 @@ export default function SelectPotSizeScreen() {
             >
               <Ionicons name="chevron-back" size={22} color="#6B7280" />
             </TouchableOpacity>
+            <Text style={styles.title}>Select Pot Size</Text>
             <TouchableOpacity
               style={styles.roundIconBtn}
               onPress={handleClosePress}
@@ -195,9 +197,6 @@ export default function SelectPotSizeScreen() {
               <Ionicons name="close" size={22} color="#6B7280" />
             </TouchableOpacity>
           </View>
-
-          {/* Title */}
-          <Text style={styles.title}>Select Pot Size</Text>
 
           {/* Plant Image */}
           <View style={styles.imageWrapper}>
@@ -368,16 +367,17 @@ const styles = StyleSheet.create({
 
   // Title
   title: {
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#1F1F1F",
     textAlign: "center",
-    marginTop: 10,
+    fontFamily: "Inter",
+    flex: 1,
   },
 
   // Plant Image
   imageWrapper: {
-    marginTop: 24,
+    marginTop: 38,
     alignItems: "center",
     justifyContent: "center",
     height: 240,
@@ -442,6 +442,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#1F1F1F",
     textAlign: "center",
+    fontFamily: "Inter",
   },
 
   // Pot Options
@@ -473,13 +474,13 @@ const styles = StyleSheet.create({
   potName: {
     marginTop: 8,
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   potNameActive: {
-    color: "#1F1F1F",
+    color: "#000000",
   },
   potNameInactive: {
-    color: "#6B7280",
+    color: "#000000",
   },
   potMeasurement: {
     marginTop: 2,
@@ -526,14 +527,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   recommendationTitle: {
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: "#1F1F1F",
     marginBottom: 4,
   },
   recommendationText: {
-    fontSize: 13,
-    color: "#6B7280",
+    fontSize: 12,
+    fontWeight: "400",
+    color: "#868686",
     lineHeight: 19,
   },
 
@@ -561,7 +563,8 @@ const styles = StyleSheet.create({
   },
   continueButtonText: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "Roboto",
   },
 });

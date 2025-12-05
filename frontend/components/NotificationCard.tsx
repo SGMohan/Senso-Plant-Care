@@ -27,7 +27,7 @@ interface NotificationCardProps {
     message: string;
     plantName: string;
     time: string;
-    priority: 'high' | 'medium' | 'normal' | 'low' | 'info';
+    priority: "high" | "medium" | "normal" | "low" | "info";
     read: boolean;
     icon: ImageSourcePropType;
     iconColor: string;
@@ -55,15 +55,15 @@ export default function NotificationCard({
   // ============================================================================
   // BACKEND INTEGRATION HANDLERS
   // ============================================================================
-  
+
   // Handle notification press with analytics
   const handlePress = () => {
     // TODO: Track notification interaction analytics
     // AnalyticsService.trackNotificationClick(notification.id, notification.type);
-    
+
     onPress(notification.id.toString());
   };
-  
+
   // Handle long press for context menu
   const handleLongPress = () => {
     // TODO: Show context menu with options (mark as read, delete, etc.)
@@ -71,21 +71,21 @@ export default function NotificationCard({
       onLongPress(notification.id.toString());
     }
   };
-  
+
   // Handle delete action
   const handleDelete = () => {
     if (onDelete) {
       onDelete(notification.id.toString());
     }
   };
-  
+
   // TODO: Format time with proper localization
   const formatTime = (timeString: string) => {
     // TODO: Use proper date formatting library (date-fns, moment, etc.)
     // return formatDistanceToNow(new Date(timeString), { addSuffix: true });
     return timeString;
   };
-  
+
   // TODO: Get notification type icon based on type
   const getNotificationTypeIcon = () => {
     // TODO: Map notification types to appropriate icons
@@ -96,7 +96,7 @@ export default function NotificationCard({
     //   case 'plant_health': return 'medical-outline';
     //   default: return 'notifications-outline';
     // }
-    return 'notifications-outline';
+    return "notifications-outline";
   };
 
   const getPriorityColor = (priority: string) => {
@@ -117,10 +117,7 @@ export default function NotificationCard({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.notificationCard,
-        !notification.read && styles.unreadCard
-      ]}
+      style={[styles.notificationCard, !notification.read && styles.unreadCard]}
       onPress={handlePress}
       onLongPress={handleLongPress}
       activeOpacity={0.7}
@@ -158,7 +155,9 @@ export default function NotificationCard({
           <Text style={styles.notificationMessage}>{notification.message}</Text>
           <View style={styles.footer}>
             <Text style={styles.plantName}>{notification.plantName}</Text>
-            <Text style={styles.notificationTime}>{formatTime(notification.time)}</Text>
+            <Text style={styles.notificationTime}>
+              {formatTime(notification.time)}
+            </Text>
           </View>
         </View>
       </View>
@@ -205,17 +204,18 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#111827",
     marginBottom: 2,
     fontFamily: "Inter",
   },
   notificationMessage: {
     fontSize: 14,
+    fontWeight: "400",
     color: "#6b7280",
     lineHeight: 20,
     marginBottom: 6,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   footer: {
     flexDirection: "row",
@@ -224,14 +224,14 @@ const styles = StyleSheet.create({
   },
   plantName: {
     fontSize: 13,
-    color: "#10b981",
+    color: "#4AA88B",
     fontWeight: "500",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   notificationTime: {
     fontSize: 13,
     color: "#9ca3af",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   priorityBadge: {
     position: "absolute",

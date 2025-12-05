@@ -307,17 +307,19 @@ const styles = StyleSheet.create({
 
   // Titles
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#111827",
+    fontSize: 24,
+    fontWeight: "500",
+    color: "#3E4E2F",
     textAlign: "center",
     marginTop: 12,
+    fontFamily: "Roboto",
   },
   subtitle: {
     fontSize: 14,
     color: "#6B7280",
     textAlign: "center",
     marginTop: 4,
+    fontFamily: "Roboto",
   },
 
   // Image
@@ -360,6 +362,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#111827",
+    fontFamily: "Roboto",
   },
 
   // Locations
@@ -391,6 +394,7 @@ const styles = StyleSheet.create({
   locationButtonText: {
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "Roboto",
   },
   locationButtonTextActive: {
     color: PRIMARY_GREEN,
@@ -410,6 +414,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: "#6B7280",
+    fontFamily: "Roboto",
   },
 
   // Bottom sheet buttons
@@ -445,16 +450,17 @@ const styles = StyleSheet.create({
   },
   bottomButtonInactive: {
     backgroundColor: "#FFFFFF",
-    borderColor: PRIMARY_GREEN,
+    borderColor: "#6C9A75",
   },
   bottomButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "Roboto",
   },
   bottomButtonTextActive: {
     color: "#FFFFFF",
   },
   bottomButtonTextInactive: {
-    color: PRIMARY_GREEN,
+    color: "#627456",
   },
 });

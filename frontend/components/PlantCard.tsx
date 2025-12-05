@@ -21,13 +21,18 @@ export default function PlantCard({ plant }: PlantCardProps) {
   
   const handlePlantPress = () => {
     // TODO: Backend Integration - Pass plant ID and instruction type as params
+    router.push('/plantinfo');
+  };
+
+  const handleImagePress = () => {
+    // Navigate to instruction page when plant image is clicked
     router.push('/instruction');
   };
   
   return (
     <TouchableOpacity style={styles.plantCard} onPress={handlePlantPress}>
       <View style={styles.plantCardContent}>
-        <View style={styles.plantImageContainer}>
+        <TouchableOpacity style={styles.plantImageContainer} onPress={handleImagePress}>
           <Image 
             source={plant.image} 
             style={styles.plantImage}
@@ -35,7 +40,7 @@ export default function PlantCard({ plant }: PlantCardProps) {
             fadeDuration={0}
             loadingIndicatorSource={require('../assets/plant_1.png')}
           />
-        </View>
+        </TouchableOpacity>
         <View style={styles.plantInfo}>
           <View style={styles.plantInfoRow}>
             <View style={styles.plantNameContainer}>
@@ -147,16 +152,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   plantName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "600",
     color: "#1a3c2a",
     fontFamily: "Inter",
   },
   plantType: {
     fontSize: 14,
+    fontWeight: "400",
     color: "#6b8a7a",
     marginTop: 2,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   deviceButton: {
     backgroundColor: "transparent",
@@ -169,20 +175,21 @@ const styles = StyleSheet.create({
     borderColor: "#3E4E2F",
   },
   deviceButtonInactive: {
-    borderColor: "#868686",
+    borderColor: "#3E4E2F",
   },
   deviceButtonPressed: {
     backgroundColor: "#E8F5E8",
   },
   deviceButtonText: {
-    fontSize: 12,
+    fontSize: 10,
+    fontWeight: "400",
     fontFamily: "Roboto",
   },
   deviceButtonTextActive: {
-    color: "#3E4E2F",
+    color: "#3E5842",
   },
   deviceButtonTextInactive: {
-    color: "#868686",
+    color: "#3E5842",
   },
   plantMetrics: {
     flexDirection: "row",
@@ -201,8 +208,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   metricValue: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "400",
     color: "#1a3c2a",
     fontFamily: "Inter",
   },
@@ -212,6 +219,6 @@ const styles = StyleSheet.create({
     color: "#9ca3af",
     fontStyle: "italic",
     marginTop: 8,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
 });

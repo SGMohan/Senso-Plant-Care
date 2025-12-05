@@ -523,23 +523,23 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   instructionTitle: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#2d4a3d",
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#000000",
     marginBottom: 12,
     fontFamily: "Inter",
   },
   instructionText: {
-    fontSize: 15,
-    color: "#6b7c6b",
+    fontSize: 14,
+    color: "#4C4C4C",
     lineHeight: 22,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
   spacer: {
     flex: 1,
   },
   continueButton: {
-    backgroundColor: "#4a8766",
+    backgroundColor: "#5A9D6E",
     borderRadius: 12,
     paddingVertical: 18,
     paddingHorizontal: 32,
@@ -553,9 +553,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   continueButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#ffffff",
-    fontFamily: "Inter",
+    fontFamily: "Roboto",
   },
 });

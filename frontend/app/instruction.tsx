@@ -297,8 +297,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: "#111827",
     fontFamily: "Inter",
   },
@@ -328,18 +328,19 @@ const styles = StyleSheet.create({
   },
   plantName: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#111827",
     textAlign: "center",
-    marginBottom: 6,
+    marginBottom: 2,
     fontFamily: "Inter",
   },
   botanicalName: {
-    fontSize: 15,
+    fontSize: 14,
+    fontWeight: "400",
     color: "#9CA3AF",
     textAlign: "center",
-    marginBottom: 20,
-    fontFamily: "Roboto",
+    marginBottom: 18,
+    fontFamily: "Inter",
   },
 
   // BOTTOM SHEET
@@ -434,6 +435,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#6B7280",
     lineHeight: 18,
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
   },
 });

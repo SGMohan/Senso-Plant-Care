@@ -107,17 +107,20 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   welcomeTitle: {
-    fontSize: 32,
-    fontWeight: "700",
+    fontSize: 24,
+    fontWeight: "600",
     color: "#1a3c2a",
     marginBottom: 16,
     textAlign: "center",
+    fontFamily: "Inter",
   },
   welcomeSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "400",
     color: "#6b8a7a",
     lineHeight: 24,
     textAlign: "center",
+    fontFamily: "Inter",
   },
   spacer: {
     flex: 1,
@@ -139,9 +142,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   primaryButtonText: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#ffffff",
+    fontFamily: "Roboto",
   },
   secondaryButton: {
     backgroundColor: "transparent",
@@ -153,8 +157,9 @@ const styles = StyleSheet.create({
     borderColor: "#2d5a3d",
   },
   secondaryButtonText: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#2d5a3d",
+    fontFamily: "Roboto",
   },
 });

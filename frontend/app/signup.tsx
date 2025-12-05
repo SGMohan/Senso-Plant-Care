@@ -203,9 +203,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: "#1a3c2a",
+    fontFamily: "Inter",
   },
   placeholder: {
     width: 44,
@@ -215,15 +216,18 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "700",
+    fontSize: 24,
+    fontWeight: "600",
     color: "#1a3c2a",
     marginBottom: 8,
+    fontFamily: "Inter",
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "400",
     color: "#6b8a7a",
     marginBottom: 40,
+    fontFamily: "Inter",
   },
   form: {
     gap: 20,
@@ -233,19 +237,22 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inputLabel: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#1a3c2a",
+    fontFamily: "Inter",
   },
   input: {
     backgroundColor: "#ffffff",
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "400",
     color: "#1a3c2a",
     borderWidth: 1,
     borderColor: "#e2e8e4",
+    fontFamily: "Inter",
   },
   signupButton: {
     backgroundColor: "#2d5a3d",
@@ -261,9 +268,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   signupButtonText: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#ffffff",
+    fontFamily: "Roboto",
   },
   loginContainer: {
     flexDirection: "row",
@@ -272,12 +280,15 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   loginText: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "400",
     color: "#6b8a7a",
+    fontFamily: "Inter",
   },
   loginLink: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: "#2d5a3d",
+    fontFamily: "Inter",
   },
 });

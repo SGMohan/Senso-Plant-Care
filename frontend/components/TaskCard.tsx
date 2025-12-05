@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
 
 interface TaskCardProps {
   task: {
@@ -11,18 +11,25 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
+  // Parse title to extract action and plant name
+  // Format: "Water Monstera" -> action: "Water", plantName: "Monstera"
+  const titleParts = task.title.split(" ");
+  const action = titleParts[0]; // First word (e.g., "Water")
+  const plantName = titleParts.slice(1).join(" "); // Rest of the words (e.g., "Monstera")
+
   return (
     <View style={styles.taskCard}>
       <View style={styles.taskImageContainer}>
-        <Image 
-          source={task.image} 
+        <Image
+          source={task.image}
           style={styles.taskImage}
           resizeMode="cover"
           fadeDuration={0}
         />
       </View>
       <View style={styles.taskContent}>
-        <Text style={styles.taskTitle}>{task.title}</Text>
+        <Text style={styles.taskTitle}>{action}</Text>
+        <Text style={styles.taskPlantName}>{plantName}</Text>
         <Text style={styles.taskTime}>{task.time}</Text>
       </View>
     </View>
@@ -48,8 +55,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#EFF3EA",
     borderRadius: 10,
     marginRight: 12,
-    width: 60,
-    height: 60,
+    width: 54,
+    height: 54,
     overflow: "hidden",
   },
   taskImage: {
@@ -60,15 +67,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   taskTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "500",
     color: "#1a3c2a",
-    fontFamily: "Roboto",
+    fontFamily: "Inter",
+  },
+  taskPlantName: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#1a3c2a",
+    fontFamily: "Inter",
+    marginTop: 1.5,
   },
   taskTime: {
     fontSize: 12,
-    color: "#6b8a7a",
-    marginTop: 4,
-    fontFamily: "Roboto",
+    fontWeight: "400",
+    color: "#7D7B7B",
+    marginTop: 6,
+    fontFamily: "Inter",
   },
 });

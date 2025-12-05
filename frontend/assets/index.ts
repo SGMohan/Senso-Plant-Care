@@ -7,18 +7,48 @@
 
 // Plant images - Used in dashboard plant cards and task cards
 export const plantImages = {
-  plant1: require('./plant_1.png'),
-  plant2: require('./plant_2.png'),
-  plantProfile: require('./plant_profile_sample_image.png'),
-  smallPot: require('./small_pot.png'),
-  mediumPot: require('./medium_pot.png'),
-  largePot: require('./large_pot.png'),
-  recommendPlant: require('./recommend_plant.png'),
-  bigPlant: require('./big_plant.png'),
+  plant1: require("./plant_1.png"),
+  plant2: require("./plant_2.png"),
+  plantProfile: require("./plant_profile_sample_image.png"),
+  smallPot: require("./small_pot.png"),
+  mediumPot: require("./medium_pot.png"),
+  largePot: require("./large_pot.png"),
+  recommendPlant: require("./recommend_plant.png"),
+  bigPlant: require("./big_plant.png"),
+};
+
+// My Plants images - Used in myplants screen dummy data
+export const myPlantImages = {
+  myplant1: require("./myplant_1.png"),
+  myplant2: require("./myplant_2.png"),
+  myplant3: require("./myplant_3.png"),
+  myplant4: require("./myplant_4.png"),
+  myplant5: require("./myplant_5.png"),
+};
+
+// Soil images - Used in soil type selection screen
+export const soilImages = {
+  soil1: require('./soil_1.png'),
+  soil2: require('./soil_2.png'),
+  soil3: require('./soil_3.png'),
+  soil4: require('./soil_4.png'),
+  soil5: require('./soil_5.png'),
 };
 
 // Connect images - Used in device connection page
 export const connectImage1 = require('./connect_image_1.png');
+
+// Info images - Used in plant info status cards
+export const infoImages = {
+  info1: require('./info_1.png'),
+  info2: require('./info_2.png'),
+  info3: require('./info_3.png'),
+};
+
+// UI icons - Used in various screens
+export const uiIcons = {
+  shareIcon: require('./share_icon.png'),
+};
 
 // Notification images - Used in notification cards
 export const notificationImages = {
@@ -66,6 +96,105 @@ export const plants = [
     image: plantImages.plant1,
   },
 ];
+
+// My Plants by location - Used in: app/myplants.tsx
+// Dummy data for user's plants grouped by location
+export const myPlantsByLocation = {
+  LivingRoom: [
+    {
+      id: 1,
+      name: "Monstera",
+      type: "Deliciosa",
+      location: "Living Room",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant1,
+    },
+    {
+      id: 2,
+      name: "Fiddle",
+      type: "Leaf Fig",
+      location: "Living Room",
+      needsWater: false,
+      health: "excellent",
+      image: myPlantImages.myplant2,
+    },
+    {
+      id: 3,
+      name: "Snake Plant",
+      type: "Laurentii",
+      location: "Living Room",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant3,
+    },
+    {
+      id: 4,
+      name: "Pelia",
+      type: "Peperomia",
+      location: "Living Room",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant4,
+    },
+    {
+      id: 5,
+      name: "Fiddle",
+      type: "Leaf Fig",
+      location: "Living Room",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant5,
+    }
+  ],
+  Balcony: [
+        {
+      id: 6,
+      name: "Monstera",
+      type: "Deliciosa",
+      location: "Balcony",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant1,
+    },
+    {
+      id: 7,
+      name: "Fiddle",
+      type: "Leaf Fig",
+      location: "Balcony",
+      needsWater: false,
+      health: "excellent",
+      image: myPlantImages.myplant2,
+    },
+    {
+      id: 8,
+      name: "Snake Plant",
+      type: "Laurentii",
+      location: "Balcony",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant3,
+    },
+    {
+      id: 9,
+      name: "Pelia",
+      type: "Peperomia",
+      location: "Balcony",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant3,
+    },
+    {
+      id: 10,
+      name: "Fiddle",
+      type: "Leaf Fig",
+      location: "Balcony",
+      needsWater: true,
+      health: "good",
+      image: myPlantImages.myplant4,
+    },
+  ],
+};
 
 // Tasks data - Used in: app/dashboard/index.tsx
 // Displays "Today's Tasks" horizontal scroll cards
@@ -209,9 +338,101 @@ export const potSizes = [
   },
 ];
 
+// Soil types data - Used in: app/soiltype.tsx
+// Soil type options for plant setup with descriptions and images
+export const soilTypes = [
+  {
+    id: "potting-mix",
+    name: "Potting Mix",
+    description: "Ideal for most houseplants, retains moisture",
+    image: soilImages.soil1,
+  },
+  {
+    id: "cactus-mix",
+    name: "Cactus Mix",
+    description: "Excellent drainage, low nutrients",
+    image: soilImages.soil2,
+  },
+  {
+    id: "peat-moss",
+    name: "Peat Moss",
+    description: "Improves aeration, retains water",
+    image: soilImages.soil3,
+  },
+  {
+    id: "perlite-mix",
+    name: "Perlite Mix",
+    description: "Enhances drainage, lightweight",
+    image: soilImages.soil4,
+  },
+  {
+    id: "orchid-bark",
+    name: "Orchid Bark",
+    description: "Aeration, prevents waterlogging",
+    image: soilImages.soil5,
+  },
+];
+
+// Plant info data - Used in: app/plantinfo.tsx
+// Plant details and status cards for plant information screen
+export const plantInfoData = {
+  name: "Monstera Deliciosa",
+  botanicalName: "Monstera Deliciosa",
+};
+
+// Plant info status cards - Used in: app/plantinfo.tsx
+// Status cards displaying plant metrics with icons or images
+export const plantInfoStatusCards = [
+  {
+    id: "humidity",
+    icon: "water",
+    iconColor: "#3B82F6",
+    value: "80%",
+    bgColor: "#F0FDF4",
+  },
+  {
+    id: "temp",
+    icon: "thermometer",
+    iconColor: "#EF4444",
+    value: "18°C",
+    bgColor: "#F0FDF4",
+  },
+  {
+    id: "dli",
+    icon: "sunny",
+    iconColor: "#F59E0B",
+    value: "0.2 DLI",
+    bgColor: "#F0FDF4",
+  },
+  {
+    id: "watering",
+    image: infoImages.info1,
+    value: "Every 7 days",
+    bgColor: "#F0FDF4",
+    label: "Every",
+    sublabel: "7 days",
+  },
+  {
+    id: "light",
+    image: infoImages.info2,
+    value: "Indirect light",
+    bgColor: "#F0FDF4",
+    label: "Indirect",
+    sublabel: "light",
+  },
+  {
+    id: "range",
+    image: infoImages.info3,
+    value: "18-27°C",
+    bgColor: "#F0FDF4",
+  },
+];
+
 // ============================================================================
 // USAGE SUMMARY:
 // - plantImages: Referenced in plants, tasks, and notification components
+// - soilImages: Soil type images used in soil selection screen
+// - infoImages: Info images used in plant info status cards
 // - plants: Dashboard plant cards with sensor metrics and connection status
 // - tasks: Dashboard "Today's Tasks" section with plant care reminders
 // - notifications: Notifications page with alert cards and priority badges
@@ -219,4 +440,7 @@ export const potSizes = [
 // - instructionPlantData: Plant details for instruction page header
 // - careInstructions: Step-by-step care instructions with icons and descriptions
 // - potSizes: Pot size selection options for plant setup with measurements
+// - soilTypes: Soil type selection options for plant setup with descriptions
+// - plantInfoData: Plant details for plant info screen (name, botanicalName)
+// - plantInfoStatusCards: Status cards for plant info screen with metrics
 // ============================================================================
