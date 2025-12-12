@@ -1,7 +1,56 @@
-# Senso Plant Care App - Complete Documentation
+# Senso Plant Care - Complete Project Documentation
 
 ## 🌱 Overview
 Senso Plant Care is a comprehensive React Native application for smart plant monitoring and care management. The app integrates AI-powered plant identification, IoT sensor monitoring, and personalized care recommendations.
+
+## 🚀 Quick Start
+
+### 1. Start Both Servers
+```bash
+# Option 1: Use the batch file (Windows) - from root directory
+start-servers.bat
+
+# Option 2: Manual start
+# Terminal 1 - Backend
+cd backend
+npm run dev
+
+# Terminal 2 - Frontend  
+cd frontend
+npm start
+```
+
+### 2. Access the App
+- **Backend API**: http://192.168.1.3:3000
+- **Frontend Dev**: http://192.168.1.3:8081
+- **Mobile**: Scan QR code with Expo Go app
+
+## 📱 Mobile Testing
+
+### iOS Testing
+1. Install Expo Go from App Store
+2. Scan QR code from terminal
+3. App will load with backend connectivity
+
+### Android Testing
+1. Install Expo Go from Play Store
+2. Scan QR code from terminal
+3. App will load with backend connectivity
+
+## 🔧 Network Configuration
+
+### Current Setup
+- **Backend**: Listens on `0.0.0.0:3000` (all network interfaces)
+- **Frontend**: Connects to `192.168.1.3:3000`
+- **CORS**: Configured for mobile development
+- **Timeout**: 10 seconds for network requests
+
+### Troubleshooting
+If you get network errors:
+1. Check your local IP: `ipconfig` (Windows) or `ifconfig` (Mac/Linux)
+2. Update `.env` files with your IP address
+3. Restart both servers
+4. Ensure firewall allows connections on port 3000
 
 ## 📱 Project Structure
 
@@ -20,6 +69,7 @@ frontend/
 │   ├── myplants.tsx       # Plant collection view
 │   ├── plantinfo.tsx      # Individual plant management
 │   ├── instruction.tsx    # Plant care instructions
+│   ├── selectdevice.tsx   # Device selection
 │   ├── connectdevice.tsx  # Device pairing initiation
 │   ├── wifiselect.tsx     # WiFi network selection
 │   ├── sensoconnect.tsx   # Device connection process
@@ -32,7 +82,6 @@ frontend/
 │   └── TaskCard.tsx
 ├── services/              # API Service Layer
 │   ├── api.ts             # Base API configuration
-│   ├── authService.ts     # Authentication services
 │   ├── deviceService.ts   # Device management
 │   └── wifiService.ts     # WiFi connectivity
 ├── context/               # State Management
@@ -41,33 +90,20 @@ frontend/
 └── constants/             # App constants & configuration
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-- Expo CLI
-- React Native development environment
-
-### Installation
-
-1. **Install dependencies**
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-2. **Start the development server**
-   ```bash
-   npm start
-   # or
-   npx expo start
-   ```
-
-3. **Run on device/simulator**
-   - Press `a` for Android emulator
-   - Press `i` for iOS simulator
-   - Scan QR code with Expo Go app
+### Backend Architecture
+```
+backend/
+├── controllers/           # Route handlers
+│   └── auth.controller.js # Authentication logic
+├── middleware/            # Express middleware
+│   └── auth.middleware.js # JWT authentication
+├── models/                # Database models
+│   └── auth.model.js      # User authentication model
+├── config/                # Configuration files
+│   └── db.js              # Database connection
+├── index.js               # Server entry point
+└── package.json           # Dependencies and scripts
+```
 
 ## 🔧 Technology Stack
 
@@ -76,44 +112,32 @@ frontend/
 - **Expo SDK 54**: Development platform and tools
 - **TypeScript**: Type-safe JavaScript
 - **Expo Router**: File-based navigation
-- **React Query**: Server state management
 - **AsyncStorage**: Local data persistence
 - **Expo Camera**: Camera functionality
-- **Expo Image Picker**: Image selection
 - **React Native Reanimated**: Smooth animations
 - **React Native SVG**: Vector graphics
 
-### Backend Integration Ready
-- **Authentication**: JWT-based auth system
-- **Real-time Data**: WebSocket connections
-- **AI Integration**: Gemini AI & Plant.ID APIs
-- **Device Management**: IoT sensor connectivity
-- **Push Notifications**: Firebase/APNs support
+### Backend Technologies
+- **Node.js**: JavaScript runtime
+- **Express.js**: Web application framework
+- **MongoDB**: NoSQL database
+- **JWT**: JSON Web Tokens for authentication
+- **bcrypt**: Password hashing
+- **CORS**: Cross-origin resource sharing
 
-## 📋 Features Implemented
-
-### ✅ Core Features
-- **User Authentication**: Login, signup, logout with backend integration
-- **Plant Dashboard**: Overview of all user plants
-- **AI Plant Identification**: Camera-based plant recognition (UI ready)
-- **Plant Profile Management**: Create and manage plant profiles
-- **Device Connection Flow**: Complete IoT device pairing workflow
-- **Notifications System**: In-app notification management
-- **Real-time Monitoring**: Sensor data visualization (UI ready)
-- **Care Instructions**: Personalized plant care guidance
-
-### ✅ Navigation Flows
-- **Onboarding Flow**: Welcome → Login/Signup → Dashboard
-- **Plant Addition**: Scanner → AI Identification → Profile Creation
-- **Device Pairing**: Connect → WiFi Setup → Pairing → Completion
-- **Plant Management**: Dashboard → Plant Details → Care Instructions
-
-### ✅ UI/UX Components
-- **Bottom Navigation**: Seamless app navigation
-- **Plant Cards**: Interactive plant status display
-- **Task Cards**: Care task management
-- **Notification Cards**: Alert and reminder system
-- **Real-time Graphs**: Sensor data visualization
+## ✅ Features Working
+- ✅ User Registration
+- ✅ User Login  
+- ✅ JWT Authentication
+- ✅ Cross-platform (iOS/Android)
+- ✅ Network connectivity
+- ✅ Error handling
+- ✅ Loading states
+- ✅ Plant Dashboard
+- ✅ Device Selection Flow
+- ✅ Real-time Graph Components
+- ✅ Notification System
+- ✅ Plant Profile Management
 
 ## 🔐 Authentication System
 
@@ -136,62 +160,78 @@ POST /api/auth/logout    # User logout
 - **Error Handling**: Comprehensive error management
 - **Loading States**: Smooth user experience during auth operations
 
-## 🤖 AI Integration Points
+## 🔄 Development Workflow
+1. Make changes to code
+2. App will hot reload automatically
+3. Backend changes require server restart
+4. Test on both iOS and Android devices
 
-### Gemini AI Integration (Ready for Backend)
-Strategic AI integration points throughout the application:
+## 📱 Navigation Flow
 
-#### Scanner (`app/scanner.tsx`)
-```typescript
-// GEMINI AI INTEGRATION READY:
-// - Plant species identification via Gemini Vision API
-// - Disease detection and health assessment
-// - Personalized care recommendations
-// - Custom care schedules generation
+### Main Navigation Flows
+1. **App Launch** → Auth Check → Dashboard/Welcome
+2. **Plant Addition** → Scanner → AI ID → Profile Creation → Dashboard
+3. **Device Pairing** → Select Device → Connect → WiFi → Pairing → Completion → Dashboard
+4. **Plant Management** → Dashboard → Plant Details → Care Instructions
+
+## 🌐 Environment Configuration
+
+### Development Environment
+```env
+# Frontend (.env)
+EXPO_PUBLIC_API_BASE_URL=http://192.168.1.3:3000
+
+# Backend (.env)
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/senso-plant-care
+JWT_SECRET=your-secret-key
 ```
 
-#### Plant Management (`app/plantinfo.tsx`)
-```typescript
-// GEMINI AI INTEGRATION READY:
-// - Real-time sensor data analysis
-// - Predictive plant health insights
-// - Growth optimization recommendations
-// - Environmental condition analysis
-```
+## 🚀 Building APK for Android
 
-### Plant.ID API Integration (Fallback)
-- **Documentation**: https://documenter.getpostman.com/view/24599534/2s93z5A4v2
-- **Purpose**: Backup identification when Gemini AI fails
-- **Features**: Plant identification, health assessment, disease detection
+### Prerequisites
+- Node.js installed
+- Expo account (free) - sign up at https://expo.dev
 
-## 📊 Backend Integration Status
+### Steps
+1. **Install EAS CLI**
+   ```bash
+   npm install -g eas-cli
+   ```
 
-### ✅ Implemented
-- **Authentication System**: Complete JWT-based auth
-- **API Client Setup**: Base HTTP client with interceptors
-- **Error Handling**: Global error management
-- **Token Management**: Secure storage and refresh
+2. **Login to Expo**
+   ```bash
+   eas login
+   ```
 
-### 🔄 Ready for Implementation
-- **Plant Management APIs**: CRUD operations for plants
-- **Device Management**: IoT device connectivity
-- **Sensor Data Streaming**: Real-time WebSocket connections
-- **AI Services**: Gemini AI and Plant.ID integration
+3. **Configure EAS (First time only)**
+   ```bash
+   cd frontend
+   eas build:configure
+   ```
+
+4. **Build APK**
+   ```bash
+   eas build --platform android --profile preview
+   ```
+
+5. **Download APK**
+   - After build completes, you'll get a download URL
+   - Share the APK file with others
+
+## 🔮 Future Enhancements
+
+### AI Integration Ready
+- **Gemini AI**: Plant identification and care recommendations
+- **Plant.ID API**: Backup identification service
+- **Health Analysis**: Disease detection and treatment suggestions
+
+### IoT Integration Ready
+- **Real-time Sensor Data**: WebSocket connections for live monitoring
+- **Device Management**: Complete IoT device connectivity
 - **Push Notifications**: Firebase/APNs setup
-- **Image Storage**: AWS S3 or similar service
 
-## 🔌 Backend API Structure
-
-### Authentication Endpoints
-```typescript
-POST /api/auth/login      # User authentication
-POST /api/auth/register   # User registration
-POST /api/auth/refresh    # Token refresh
-POST /api/auth/logout     # User logout
-GET  /api/auth/status     # Authentication status
-```
-
-### Plant Management (Ready)
+### Backend APIs Ready for Implementation
 ```typescript
 GET    /api/plants           # Get user plants
 POST   /api/plants           # Create plant profile
@@ -201,211 +241,9 @@ POST   /api/plants/identify  # AI plant identification
 GET    /api/plants/:id/data  # Get plant sensor data
 ```
 
-### Device Management (Ready)
-```typescript
-GET  /api/devices              # Get user devices
-POST /api/devices/scan         # Scan for devices
-POST /api/devices/connect      # Connect device
-GET  /api/devices/:id/status   # Device status
-POST /api/devices/:id/settings # Update device settings
-```
+Ready for full app development! 🌱
 
-### AI Integration (Ready)
-```typescript
-POST /api/ai/gemini/identify        # Gemini plant identification
-POST /api/ai/gemini/recommendations # Care recommendations
-POST /api/ai/gemini/health-analysis # Health assessment
-POST /api/ai/plantid/identify       # Plant.ID fallback
-```
-
-## 🌐 Environment Configuration
-
-### Development Environment
-```env
-EXPO_PUBLIC_API_BASE_URL=http://localhost:3000
-EXPO_PUBLIC_WS_URL=ws://localhost:3001
-EXPO_PUBLIC_AI_ENABLED=true
-EXPO_PUBLIC_PLANT_ID_ENABLED=true
-EXPO_PUBLIC_REALTIME_ENABLED=true
-EXPO_PUBLIC_OFFLINE_ENABLED=true
-```
-
-### Production Environment
-```env
-EXPO_PUBLIC_API_BASE_URL=https://api.sensoplantcare.com
-EXPO_PUBLIC_WS_URL=wss://ws.sensoplantcare.com
-EXPO_PUBLIC_AI_ENABLED=true
-EXPO_PUBLIC_PLANT_ID_ENABLED=true
-EXPO_PUBLIC_REALTIME_ENABLED=true
-EXPO_PUBLIC_OFFLINE_ENABLED=true
-```
-
-## 📱 Navigation Flow
-
-### Main Navigation Flows
-1. **App Launch** → Auth Check → Dashboard/Welcome
-2. **Plant Addition** → Scanner → AI ID → Profile Creation → Dashboard
-3. **Device Pairing** → Connect → WiFi → Pairing → Completion → Dashboard
-4. **Plant Management** → Dashboard → Plant Details → Care Instructions
-
-### Deep Linking Support (Future)
-```typescript
-// Plant instruction deep link
-senso://instruction?plantId=123&type=watering
-
-// Device setup deep link
-senso://setup?deviceId=abc123
-
-// Notification deep link
-senso://notification?id=456
-```
-
-## 🧪 Testing
-
-### Current Test Coverage
-- **Navigation Flow Testing**: All major user journeys
-- **Component Testing**: UI component functionality
-- **Authentication Testing**: Login/signup flows
-
-### Backend Testing Requirements
-- **API Integration Testing**: Mock server responses
-- **Error Scenario Testing**: Network failures, timeouts
-- **Device Connection Testing**: Bluetooth/WiFi connectivity
-- **Real-time Data Testing**: WebSocket connections
-
-## 🔒 Security Features
-
-### Implemented Security
-- **JWT Token Management**: Secure authentication
-- **AsyncStorage Encryption**: Secure local storage
-- **API Request Validation**: Input sanitization
-- **Error Boundary Protection**: Graceful error handling
-
-### Future Security Enhancements
-- **Biometric Authentication**: Fingerprint/Face ID
-- **Social Login**: Google, Apple, Facebook OAuth
-- **Device Security**: Hardware-level encryption
-- **API Rate Limiting**: Request throttling
-
-## 📈 Performance Optimization
-
-### Current Optimizations
-- **Image Optimization**: Compressed asset loading
-- **Component Memoization**: React.memo usage
-- **Lazy Loading**: Dynamic component imports
-- **Efficient Navigation**: Expo Router optimization
-
-### Future Optimizations
-- **Data Caching**: React Query implementation
-- **Background Sync**: Offline data synchronization
-- **Image Caching**: Progressive image loading
-- **Bundle Splitting**: Code splitting strategies
-
-## 🚀 Deployment
-
-### Development Deployment
-```bash
-# Start Expo development server
-npm start
-
-# Build for development
-npx expo build:android
-npx expo build:ios
-```
-
-### Production Deployment
-```bash
-# Build for production
-npx expo build:android --release-channel production
-npx expo build:ios --release-channel production
-
-# Submit to app stores
-npx expo submit:android
-npx expo submit:ios
-```
-
-## 📚 Documentation Files
-
-### Additional Documentation
-- **BACKEND_INTEGRATION.md**: Detailed backend integration guide
-- **BACKEND_STATUS_ANALYSIS.md**: Current integration status
-- **README_AUTH_INTEGRATION.md**: Authentication implementation details
-- **NAVIGATION_FLOW_IMPLEMENTATION.md**: Navigation flow documentation
-
-## 🔄 Development Workflow
-
-### Phase 1: Core Backend Integration (Weeks 1-2)
-- [ ] Set up Node.js/Express backend with TypeScript
-- [ ] Implement remaining authentication features
-- [ ] Create PostgreSQL database schema
-- [ ] Basic CRUD operations for plants and devices
-
-### Phase 2: AI Integration (Weeks 3-4)
-- [ ] Integrate Gemini AI Vision API
-- [ ] Implement Plant.ID API as fallback
-- [ ] Create AI orchestrator service
-- [ ] Build plant identification pipeline
-
-### Phase 3: Real-time Features (Weeks 5-6)
-- [ ] Implement WebSocket connections
-- [ ] Add real-time sensor data streaming
-- [ ] Set up push notification system
-- [ ] Device status monitoring
-
-### Phase 4: Advanced Features (Weeks 7-8)
-- [ ] Offline mode support
-- [ ] Background data synchronization
-- [ ] Performance optimization
-- [ ] Security audit and testing
-
-## 🤝 Contributing
-
-### Development Guidelines
-1. **Code Style**: Follow TypeScript and React Native best practices
-2. **Component Structure**: Use functional components with hooks
-3. **State Management**: Utilize React Query for server state
-4. **Error Handling**: Implement comprehensive error boundaries
-5. **Testing**: Write unit tests for critical functionality
-
-### Git Workflow
-```bash
-# Create feature branch
-git checkout -b feature/new-feature
-
-# Make changes and commit
-git add .
-git commit -m "feat: add new feature"
-
-# Push and create PR
-git push origin feature/new-feature
-```
+---
 
 ## 📞 Support
-
-### Technical Support
-- **Documentation**: Comprehensive inline comments and README files
-- **Error Handling**: Detailed error messages and logging
-- **Development Tools**: Expo DevTools integration
-- **Debugging**: React Native Debugger support
-
-### Resources
-- **Expo Documentation**: https://docs.expo.dev/
-- **React Native Docs**: https://reactnative.dev/docs/
-- **TypeScript Guide**: https://www.typescriptlang.org/docs/
-- **React Query Docs**: https://tanstack.com/query/latest
-
----
-
-## 🎯 Current Status
-
-**Frontend**: ✅ **COMPLETE** - Fully functional with backend auth integration
-**Backend Integration**: 🔄 **IN PROGRESS** - Authentication complete, APIs ready for implementation
-**AI Integration**: 📋 **READY** - UI prepared, backend integration points identified
-**Device Management**: 📋 **READY** - Complete flow implemented, backend APIs needed
-**Production Ready**: 🔄 **80% COMPLETE** - Core features implemented, advanced features pending
-
----
-
-*Last Updated: December 2024*
-*Version: 1.0.0*
-*Status: Ready for Full Backend Integration*
+For development questions or issues, refer to the inline code comments and TODO sections throughout the codebase.
