@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
@@ -23,7 +23,12 @@ export default function BottomNavigation({ activeTab, setActiveTab }: BottomNavi
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.navItem, activeTab === "add" && styles.activeNavItem]}
-        onPress={() => router.push('/connectdevice')}
+        onPress={() => {
+          // PAIRING DEVICE FLOW - Decision: Pairing Device?
+          // YES → Pair Sensor via Bluetooth
+          // NO → Return to Plant Management Page (MVP)
+          router.push('/connectdevice');
+        }}
       >
         <Ionicons
           name="add"
@@ -69,11 +74,16 @@ const styles = StyleSheet.create({
     paddingVertical: 28,
     paddingHorizontal: 20,
     justifyContent: "space-around",
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    ...Platform.select({
+      web: { boxShadow: "0px -2px 8px rgba(0, 0, 0, 0.1)" },
+      default: {
+        elevation: 8,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderTopWidth: 1,

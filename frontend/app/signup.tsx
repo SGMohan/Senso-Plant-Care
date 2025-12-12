@@ -6,20 +6,23 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useAuth } from '../context/AppContext';
+import { Alert } from 'react-native';
 
-// TODO: Backend Integration - Authentication Service
-// import { registerUser, validateEmail, checkEmailExists } from '../services/authService';
-// import { useMutation, useQuery } from '@tanstack/react-query';
+// Authentication is handled by AppContext
 
 export default function SignupScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const { register, isLoading } = useAuth();
   
   // TODO: Backend Integration - Form validation and submission
   // const [errors, setErrors] = useState({});
@@ -51,23 +54,29 @@ export default function SignupScreen() {
     router.back();
   };
 
-  const handleSignup = () => {
-    // TODO: Backend Integration - Form validation and user registration
-    // const validationErrors = validateSignupForm({ name, email, password, confirmPassword });
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
-    // 
-    // registerMutation.mutate({
-    //   name: name.trim(),
-    //   email: email.toLowerCase().trim(),
-    //   password,
-    //   confirmPassword
-    // });
-    
-    console.log("Signup pressed");
-    router.push('/dashboard');
+  const handleSignup = async () => {
+    // Basic validation
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
+
+    try {
+      await register(name.trim(), email.toLowerCase().trim(), password);
+      router.replace('/dashboard');
+    } catch (error: any) {
+      Alert.alert('Registration Failed', error.message || 'Failed to create account');
+    }
   };
 
   // TODO: Backend Integration - Real-time email validation
@@ -96,86 +105,108 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="chevron-back" size={28} color="#1a3c2a" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Sign Up</Text>
-          <View style={styles.placeholder} />
-        </View>
-
-        {/* Content */}
-        <View style={styles.content}>
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join Senso to start monitoring your plants</Text>
-
-          {/* Form */}
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Full Name</Text>
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter your full name"
-                placeholderTextColor="#9ca3af"
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Enter your email"
-                placeholderTextColor="#9ca3af"
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Password</Text>
-              <TextInput
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Create a password"
-                placeholderTextColor="#9ca3af"
-                secureTextEntry
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Confirm Password</Text>
-              <TextInput
-                style={styles.input}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                placeholder="Confirm your password"
-                placeholderTextColor="#9ca3af"
-                secureTextEntry
-              />
-            </View>
-          </View>
-
-          {/* Sign Up Button */}
-          <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-            <Text style={styles.signupButtonText}>Create Account</Text>
-          </TouchableOpacity>
-
-          {/* Login Link */}
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Already have an account? </Text>
-            <TouchableOpacity onPress={handleLoginNavigation}>
-              <Text style={styles.loginLink}>Sign In</Text>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView} 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView 
+          style={styles.container} 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Ionicons name="chevron-back" size={28} color="#1a3c2a" />
             </TouchableOpacity>
+            <Text style={styles.headerTitle}>Sign Up</Text>
+            <View style={styles.placeholder} />
           </View>
-        </View>
-      </ScrollView>
+
+          {/* Content */}
+          <View style={styles.content}>
+            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.subtitle}>Join Senso to start monitoring your plants</Text>
+
+            {/* Form */}
+            <View style={styles.form}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Full Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="Enter your full name"
+                  placeholderTextColor="#9ca3af"
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Enter your email"
+                  placeholderTextColor="#9ca3af"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Create a password"
+                  placeholderTextColor="#9ca3af"
+                  secureTextEntry
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Confirm Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  placeholder="Confirm your password"
+                  placeholderTextColor="#9ca3af"
+                  secureTextEntry
+                  returnKeyType="done"
+                  onSubmitEditing={handleSignup}
+                />
+              </View>
+            </View>
+
+            {/* Sign Up Button */}
+            <TouchableOpacity 
+              style={[styles.signupButton, isLoading && styles.disabledButton]} 
+              onPress={handleSignup}
+              disabled={isLoading}
+            >
+              <Text style={styles.signupButtonText}>
+                {isLoading ? 'Creating Account...' : 'Create Account'}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Login Link */}
+            <View style={styles.loginContainer}>
+              <Text style={styles.loginText}>Already have an account? </Text>
+              <TouchableOpacity onPress={handleLoginNavigation}>
+                <Text style={styles.loginLink}>Sign In</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -185,9 +216,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f0f4f0",
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#f0f4f0",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   header: {
     flexDirection: "row",
@@ -261,10 +299,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     alignItems: "center",
     marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   signupButtonText: {
@@ -272,6 +307,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#ffffff",
     fontFamily: "Roboto",
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
   loginContainer: {
     flexDirection: "row",

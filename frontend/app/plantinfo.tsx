@@ -13,10 +13,11 @@ import {
   Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import RealTimeGraph from "../components/RealTimeGraph";
+import RealTimeGraph, { SimpleGraph } from "../components/RealTimeGraph";
+import HealthStatus, { HealthStatusType } from "../components/HealthStatus";
 
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import {
   plantInfoData,
@@ -81,14 +82,33 @@ const AnimatedWaveform = () => {
 };
 
 export default function PlantInfoScreen() {
+  // PLANT MANAGEMENT FLOW STATE
+  // ===========================
   const [activeTab, setActiveTab] = React.useState("todo");
   const [selectedTodos, setSelectedTodos] = React.useState<string[]>([]);
-  const [selectedButton, setSelectedButton] = React.useState<string | null>(
-    null
-  );
+  const [selectedButton, setSelectedButton] = React.useState<string | null>(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = React.useState("Day");
   const [isOnline, setIsOnline] = React.useState(false); // Toggle for online/offline mode
-  const [healthStatus, setHealthStatus] = React.useState("healthy"); // "healthy" or "unhealthy"
+  const [healthStatus, setHealthStatus] = React.useState<HealthStatusType>("healthy"); // "healthy", "warning", or "attention"
+  const [selectedMetric, setSelectedMetric] = React.useState("moisture");
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  
+  // PLANT MANAGEMENT FEATURES:
+  // - View Real-Time Data (MVP): Moisture, Light, Temperature, Time
+  // - View Historical Charts: Day / Week / Month
+  // - View Plant Info (MVP)
+  // - View Complete Daily / Weekly Insights Based on Plant Needs (MVP)
+  // - Receive AI Care Recommendations (Post-MVP)
+  
+  // TODO: GEMINI AI INTEGRATION COMMENT:
+  // ====================================
+  // Integrate Gemini AI for advanced plant management:
+  // - Real-time analysis of sensor data for health insights
+  // - Personalized care recommendations based on plant behavior
+  // - Predictive analytics for plant care scheduling
+  // - Disease detection and treatment suggestions
+  // - Growth optimization recommendations
+  // - Environmental condition analysis and suggestions
 
   const toggleTodo = (todoId: string) => {
     setSelectedTodos((prev: string[]) =>
@@ -107,8 +127,28 @@ export default function PlantInfoScreen() {
   };
 
   const handleSharePress = () => {
-    // TODO: Implement share functionality
+    // PLANT MANAGEMENT - Share Plant Information
+    // TODO: Implement share functionality with plant insights
+    // TODO: GEMINI AI INTEGRATION - Generate shareable plant health reports
     console.log("Share plant info");
+  };
+
+  const getMetricIcon = (metric: string) => {
+    switch (metric) {
+      case "moisture": return "water";
+      case "temperature": return "thermometer";
+      case "light": return "sunny";
+      default: return "water";
+    }
+  };
+
+  const getMetricColor = (metric: string) => {
+    switch (metric) {
+      case "moisture": return "#3b82f6";
+      case "temperature": return "#ef4444";
+      case "light": return "#eab308";
+      default: return "#3b82f6";
+    }
   };
 
   return (
@@ -372,61 +412,46 @@ export default function PlantInfoScreen() {
 
               {/* Health Status Section */}
               <View style={styles.healthStatusSection}>
-                <Text style={[styles.sectionTitle, { color: "#000000" }]}>
-                  Health Status
-                </Text>
-
-                <View style={styles.healthCard}>
-                  <Text style={styles.healthLabel}>Current Status :</Text>
-                  <View style={styles.healthContentRow}>
-                    <View style={styles.healthLeftContent}>
-                      <View style={styles.healthStatusRow}>
-                        <View
-                          style={[
-                            styles.healthIndicator,
-                            {
-                              backgroundColor: isOnline
-                                ? healthStatus === "healthy"
-                                  ? "#4AA88B"
-                                  : "#EF4444"
-                                : "#9CA3AF",
-                            },
-                          ]}
-                        >
-                          <Ionicons
-                            name={
-                              isOnline
-                                ? healthStatus === "healthy"
-                                  ? "checkmark"
-                                  : "close"
-                                : "help"
-                            }
-                            size={18}
-                            color="#fff"
-                          />
-                        </View>
-                        <Text style={styles.healthStatusText}>
-                          {isOnline
-                            ? healthStatus === "healthy"
-                              ? "Healthy"
-                              : "Unhealthy"
-                            : "--"}
-                        </Text>
-                      </View>
-                      <Text style={styles.healthSubtext}>
-                        Last watered : {isOnline ? "2 days ago" : "--"}
-                      </Text>
-                    </View>
-                    <View style={styles.healthRightContent}>
-                      {isOnline && (
-                        <RealTimeGraph
-                          isHealthStatus={true}
-                          useWaveOnly={true}
-                        />
-                      )}
-                    </View>
+                <View style={styles.healthStatusHeader}>
+                  <Text style={[styles.sectionTitle, { color: "#000000" }]}>
+                    Health Status
+                  </Text>
+                  <View style={styles.statusToggleContainer}>
+                    <TouchableOpacity
+                      style={[
+                        styles.statusToggle, 
+                        healthStatus === 'healthy' && { backgroundColor: '#4AA88B', borderColor: '#4AA88B' }
+                      ]}
+                      onPress={() => setHealthStatus('healthy')}
+                    >
+                      <Ionicons name="checkmark" size={12} color={healthStatus === 'healthy' ? '#fff' : '#4AA88B'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.statusToggle, 
+                        healthStatus === 'warning' && { backgroundColor: '#F59E0B', borderColor: '#F59E0B' }
+                      ]}
+                      onPress={() => setHealthStatus('warning')}
+                    >
+                      <Ionicons name="alert" size={12} color={healthStatus === 'warning' ? '#fff' : '#F59E0B'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.statusToggle, 
+                        healthStatus === 'attention' && { backgroundColor: '#EF4444', borderColor: '#EF4444' }
+                      ]}
+                      onPress={() => setHealthStatus('attention')}
+                    >
+                      <Ionicons name="close" size={12} color={healthStatus === 'attention' ? '#fff' : '#EF4444'} />
+                    </TouchableOpacity>
                   </View>
                 </View>
+
+                <HealthStatus 
+                  status={healthStatus} 
+                  isOnline={isOnline} 
+                  lastWatered="2 days ago" 
+                />
               </View>
 
               {/* Graphs Section */}
@@ -436,9 +461,41 @@ export default function PlantInfoScreen() {
                     <Text style={[styles.sectionTitle, { color: "#000000" }]}>
                       Graphs
                     </Text>
-                    <TouchableOpacity style={styles.connectedButton}>
-                      <Text style={styles.connectedButtonText}>Connected</Text>
-                    </TouchableOpacity>
+                    <View>
+                      <TouchableOpacity
+                        style={styles.dropdownButton}
+                        onPress={() => setDropdownOpen(!dropdownOpen)}
+                      >
+                        <View style={styles.dropdownIconContainer}>
+                          <Ionicons name={getMetricIcon(selectedMetric) as any} size={12} color={getMetricColor(selectedMetric)} />
+                        </View>
+                        <Ionicons name="chevron-down" size={10} color="#6B7280" />
+                      </TouchableOpacity>
+
+                      {dropdownOpen && (
+                        <View style={styles.dropdownMenu}>
+                          {[
+                            { id: "moisture", label: "Soil Moisture", icon: "water", color: "#3b82f6" },
+                            { id: "temperature", label: "Temperature", icon: "thermometer", color: "#ef4444" },
+                            { id: "light", label: "Light", icon: "sunny", color: "#eab308" },
+                          ].map((metric) => (
+                            <TouchableOpacity
+                              key={metric.id}
+                              style={styles.dropdownItem}
+                              onPress={() => {
+                                setSelectedMetric(metric.id);
+                                setDropdownOpen(false);
+                              }}
+                            >
+                              <View style={styles.dropdownItemIconContainer}>
+                                <Ionicons name={metric.icon as any} size={16} color={metric.color} />
+                              </View>
+                              <Text style={styles.dropdownItemText}>{metric.label}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
+                    </View>
                   </View>
 
                   {/* Time Period Selector */}
@@ -499,16 +556,77 @@ export default function PlantInfoScreen() {
                     </TouchableOpacity>
                   </View>
 
-                  {/* Water Content Card */}
+                  {/* Dynamic Content Card */}
                   <View style={styles.waterContentCard}>
-                    <Text style={styles.waterContentLabel}>
-                      Volumetric Water Content :
-                    </Text>
-                    <Text style={styles.waterContentValue}>13-64%</Text>
-                    <Text style={styles.waterContentRange}>Range</Text>
+                    <View style={styles.waterContentHeader}>
+                      <View>
+                        <Text style={styles.waterContentLabel}>
+                          {selectedMetric === "moisture" ? "Volumetric Water Content :" :
+                           selectedMetric === "temperature" ? "Ambient Temperature :" :
+                           "Light Amount (DLI) :"}
+                        </Text>
+                        <Text style={styles.waterContentValue}>
+                          {selectedMetric === "moisture" ? "45%" :
+                           selectedMetric === "temperature" ? "22°C" :
+                           "12.5 mol"}
+                        </Text>
+                        <Text style={styles.waterContentRange}>
+                          {selectedMetric === "moisture" ? "Volumetric" :
+                           selectedMetric === "temperature" ? "Range" :
+                           "Received today"}
+                        </Text>
+                      </View>
+                      <View style={styles.dateBadge}>
+                        <Text style={styles.dateBadgeText}>
+                          {selectedTimePeriod === "Day" ? "09 Dec 2025" : 
+                           selectedTimePeriod === "Week" ? "02 Dec - 09 Dec 2025" : 
+                           "Nov - Dec 2025"}
+                        </Text>
+                      </View>
+                    </View>
 
-                    {/* Smooth gradient wave graph */}
-                    <RealTimeGraph isHealthStatus={false} useWaveOnly={true} />
+                    {/* Dynamic graph based on selected metric */}
+                    <SimpleGraph />
+                  </View>
+
+                  {/* Dynamic Summary Cards */}
+                  <View style={styles.careSummaryContainer}>
+                    {selectedMetric === "moisture" && (
+                      <>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Last watering</Text>
+                          <Text style={styles.careSummaryDate}>Dec 7, 2025</Text>
+                        </View>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Next watering</Text>
+                          <Text style={styles.careSummaryDate}>Dec 12, 2025</Text>
+                        </View>
+                      </>
+                    )}
+                    {selectedMetric === "temperature" && (
+                      <>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Temperature</Text>
+                          <Text style={styles.careSummaryDate}>22°C current</Text>
+                        </View>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Median</Text>
+                          <Text style={styles.careSummaryDate}>21°C median</Text>
+                        </View>
+                      </>
+                    )}
+                    {selectedMetric === "light" && (
+                      <>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Trend</Text>
+                          <Text style={styles.careSummaryDate}>↗ Increasing</Text>
+                        </View>
+                        <View style={styles.careSummaryCard}>
+                          <Text style={styles.careSummaryTitle}>Avg. hours</Text>
+                          <Text style={styles.careSummaryDate}>8.5 hours</Text>
+                        </View>
+                      </>
+                    )}
                   </View>
                 </View>
               )}
@@ -520,8 +638,8 @@ export default function PlantInfoScreen() {
                     <Text style={[styles.sectionTitle, { color: "#000000" }]}>
                       Graphs
                     </Text>
-                    <TouchableOpacity style={[styles.connectedButton, { backgroundColor: "#D2D2D2", borderWidth: 0 }]}>
-                      <Text style={styles.connectedButtonText}>Add Sensor</Text>
+                    <TouchableOpacity style={styles.addSensorButton}>
+                      <Text style={styles.addSensorButtonText}>Add Sensor</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -763,10 +881,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
   headerTitle: {
@@ -782,10 +897,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
   headerRight: {
@@ -823,10 +935,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#E5E7EB",
     zIndex: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
     elevation: 5,
   },
   plantImage: {
@@ -843,10 +952,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 24,
     marginTop: 0,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    boxShadow: "0px -3px 12px rgba(0, 0, 0, 0.08)",
     elevation: 8,
   },
 
@@ -884,10 +990,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.05)",
     elevation: 2,
   },
   statusIconCircle: {
@@ -908,20 +1011,20 @@ const styles = StyleSheet.create({
   },
   statusValue: {
     fontSize: 12,
-    // fontWeight: "600",
+    fontWeight: "600",
     color: "#000000",
     fontFamily: "Inter",
   },
   statusValueTop: {
     fontSize: 12,
-    // fontWeight: "600",
+    fontWeight: "600",
     color: "#000000",
     fontFamily: "Inter",
     lineHeight: 16,
   },
   statusValueBottom: {
     fontSize: 12,
-    // fontWeight: "600",
+    fontWeight: "600",
     color: "#000000",
     fontFamily: "Inter",
     lineHeight: 16,
@@ -972,10 +1075,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   sectionTitle: {
@@ -984,6 +1084,7 @@ const styles = StyleSheet.create({
     color: "#5B9C71",
     marginBottom: 12,
     fontFamily: "Inter",
+    flex: 1,
   },
   todoItem: {
     flexDirection: "row",
@@ -1058,49 +1159,25 @@ const styles = StyleSheet.create({
   healthStatusSection: {
     marginBottom: 20,
   },
-  healthCard: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+  healthStatusHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  healthLabel: {
-    fontSize: 14,
-    color: "#111827",
-    fontWeight: "400",
-    marginBottom: 8,
+  statusToggleContainer: {
+    flexDirection: 'row',
+    gap: 8,
   },
-  healthStatusRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  healthIndicator: {
-    width: 18,
-    height: 18,
-    borderRadius: 18,
-    backgroundColor: "#4AA88B",
-    marginRight: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  healthContentRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  healthLeftContent: {
-    flex: 1,
-  },
-  healthRightContent: {
-    flex: 1,
-    alignItems: "flex-end",
-    justifyContent: "center",
+  statusToggle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   animatedWaveContainer: {
     flexDirection: "row",
@@ -1114,18 +1191,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
 
-  healthStatusText: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
-    letterSpacing: -0.5,
-  },
-  healthSubtext: {
-    fontSize: 13,
-    color: "#6B7280",
-    marginTop: 0.2,
-    fontWeight: "400",
-  },
+
+
 
   // GRAPHS SECTION
   graphsSection: {
@@ -1136,15 +1203,70 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
+    paddingHorizontal: 0,
   },
-  connectedButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  dropdownButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: "#D1D5DB",
+    backgroundColor: "#F3F4F6",
   },
-  connectedButtonText: {
+  dropdownIconContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropdownMenu: {
+    position: "absolute",
+    top: 40,
+    right: 0,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 8,
+    minWidth: 180,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    zIndex: 1000,
+  },
+  dropdownItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 10,
+    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
+  },
+
+  dropdownItemIconContainer: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropdownItemText: {
+    fontSize: 13,
+    color: "#374151",
+  },
+  addSensorButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: "#D2D2D2",
+    borderWidth: 0,
+  },
+  addSensorButtonText: {
     fontSize: 12,
     color: "#6B7280",
     fontWeight: "500",
@@ -1180,11 +1302,50 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
+    alignItems: "flex-start",
+  },
+  waterContentHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    marginBottom: 16,
+  },
+  dateBadge: {
+    backgroundColor: "#F3F4F6",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  dateBadgeText: {
+    fontSize: 12,
+    color: "#3E5842",
+    fontWeight: "500",
+  },
+  careSummaryContainer: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 20,
+  },
+  careSummaryCard: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+    elevation: 1,
+  },
+  careSummaryTitle: {
+    fontSize: 12,
+    color: "#6B7280",
+    marginBottom: 4,
+  },
+  careSummaryDate: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#2d5a3d",
   },
   waterContentLabel: {
     fontSize: 13,
@@ -1215,10 +1376,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   infoHeaderRow: {
@@ -1263,10 +1421,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   careGridText: {
@@ -1321,10 +1476,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: "0px -2px 8px rgba(0, 0, 0, 0.1)",
     elevation: 10,
   },
   bottomButtonsRow: {
@@ -1373,10 +1525,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginRight: 12,
     width: 130,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   careGuideIconContainer: {

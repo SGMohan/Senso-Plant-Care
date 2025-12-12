@@ -145,9 +145,17 @@ export default function ScannerScreen() {
     //
     // AI IDENTIFICATION SERVICE:
     // - Backend: POST /api/plants/identify
-    // - Send image to TensorFlow/PyTorch model
+    // - Send image to Plant.ID API or Gemini AI
     // - Process AI response with confidence scoring
     // - Handle multiple plant suggestions
+    //
+    // GEMINI AI INTEGRATION COMMENT:
+    // =============================
+    // Integrate Gemini AI for plant identification and care recommendations
+    // - Use Gemini Vision API for plant species identification
+    // - Generate personalized care instructions based on plant type
+    // - Provide disease detection and health assessment
+    // - Create custom care schedules and reminders
     //
     // USER ANALYTICS & TRACKING:
     // - Track scan attempts and success rates
@@ -160,16 +168,63 @@ export default function ScannerScreen() {
       // const photo = await cameraRef.current?.takePictureAsync({ quality: 0.8 });
       // const result = await PlantScannerService.identifyPlant(photo?.uri as string);
 
-      // mock delay
+      // Mock delay for scanning animation
       await new Promise((res) => setTimeout(res, 3000));
-      Alert.alert(
-        "Plant Identified! 🌿",
-        "Monstera Deliciosa (95% confidence)",
-        [
-          { text: "Name Your Plant", onPress: () => router.push("/nameplant") },
-          { text: "Scan Again", style: "cancel" },
-        ]
-      );
+      
+      // PLANT IDENTIFICATION FLOW IMPLEMENTATION
+      // =======================================
+      // Decision: AI Identification Successful?
+      const identificationSuccessful = Math.random() > 0.2; // 80% success rate for demo
+      
+      if (identificationSuccessful) {
+        // YES → Personalized Plant Profile (MVP)
+        Alert.alert(
+          "Plant Identified! 🌿",
+          "Monstera Deliciosa (95% confidence)",
+          [
+            { 
+              text: "Create Profile", 
+              onPress: () => {
+                // Navigate to plant profile creation
+                router.push({
+                  pathname: "/nameplant",
+                  params: {
+                    plantType: "Monstera Deliciosa",
+                    confidence: "95",
+                    scannedImageUri: "mock_image_uri" // TODO: Pass actual image URI
+                  }
+                });
+              }
+            },
+            { text: "Scan Again", style: "cancel" },
+          ]
+        );
+      } else {
+        // NO → Manual Plant Addition
+        Alert.alert(
+          "Plant Not Identified",
+          "We couldn't identify this plant. Would you like to add it manually?",
+          [
+            { 
+              text: "Add Manually", 
+              onPress: () => {
+                // Navigate to manual plant addition
+                router.push({
+                  pathname: "/nameplant",
+                  params: {
+                    plantType: "Unknown Plant",
+                    confidence: "0",
+                    scannedImageUri: "mock_image_uri", // TODO: Pass actual image URI
+                    isManual: "true"
+                  }
+                });
+              }
+            },
+            { text: "Try Again", style: "cancel" },
+          ]
+        );
+      }
+      
       setPlantsIdentified((prev) => prev + 1);
     } catch (err) {
       console.error(err);
@@ -586,10 +641,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 3,
     backgroundColor: "#00F79F",
-    shadowColor: "#22C55E",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 8,
+    boxShadow: "0px 0px 8px #22C55Ecc",
   },
 
   // corner brackets
@@ -649,10 +701,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
     elevation: 8,
   },
   smallControlBtn: {

@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useAuth } from '../context/AppContext';
 import { plants, tasks } from "../assets";
 import TaskCard from "../components/TaskCard";
 import PlantCard from "../components/PlantCard";
@@ -103,6 +104,14 @@ const useTaskData = () => {
 export default function DashboardScreen() {
   const [activeTab, setActiveTab] = useState("home");
   const [activeFilter, setActiveFilter] = useState("all");
+  const { user, logout, isAuthenticated } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace('/login');
+    }
+  }, [isAuthenticated]);
 
   // ============================================================================
   // BACKEND DATA INTEGRATION
@@ -160,12 +169,23 @@ export default function DashboardScreen() {
           >
             <Ionicons name="notifications-outline" size={24} color="#666" />
           </TouchableOpacity>
+          
           <View style={styles.profileContainer}>
-            <TouchableOpacity style={styles.profileButton}>
+            <TouchableOpacity 
+              style={styles.profileButton}
+              onPress={() => router.push('/profile' as any)}
+            >
               <Ionicons name="person-outline" size={24} color="#666" />
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Welcome Message */}
+        {user && (
+          <View style={styles.welcomeSection}>
+            <Text style={styles.welcomeText}>Welcome back, {user.name}!</Text>
+          </View>
+        )}
 
         {/* Today's Tasks */}
         <View style={styles.section}>
@@ -280,6 +300,9 @@ export default function DashboardScreen() {
         setActiveTab(tab);
         if (tab === "home") {
           router.push("/myplants");
+        } else if (tab === "add") {
+          // ADDING PLANTS FLOW - Step 1: Photo Identification
+          router.push("/scanner");
         }
       }} />
     </LinearGradient>
@@ -305,10 +328,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
   profileContainer: {
@@ -321,14 +341,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
+
   container: {
     flex: 1,
+  },
+  welcomeSection: {
+    paddingHorizontal: 16,
+    marginTop: 8,
+  },
+  welcomeText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#1a3c2a",
+    fontFamily: "Inter",
   },
   section: {
     paddingHorizontal: 16,
@@ -446,10 +474,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
     elevation: 3,
   },
   plantCardContent: {
@@ -468,7 +493,6 @@ const styles = StyleSheet.create({
   plantImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
   },
   plantInfo: {
     flex: 1,
@@ -548,10 +572,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: "space-around",
     elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderTopWidth: 1,

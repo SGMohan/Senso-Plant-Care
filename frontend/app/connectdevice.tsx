@@ -38,10 +38,17 @@ export default function ConnectDeviceScreen() {
   // });
 
   const handleClose = () => {
-    router.back();
+    // PAIRING DEVICE FLOW - Decision: Pairing Device? NO
+    // Return to Plant Management Page (MVP)
+    router.push('/myplants');
   };
 
   const handleReadyToConnect = () => {
+    // PAIRING DEVICE FLOW IMPLEMENTATION
+    // ==================================
+    // Decision: Pairing Device? YES → Pair Sensor via Bluetooth
+    // Navigate to WiFi selection for device setup
+    
     // TODO: Backend Integration - Start device scanning and connection process
     // setIsScanning(true);
     // scanDevicesMutation.mutate();
@@ -164,10 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     marginHorizontal: 12,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   connectButtonText: {

@@ -28,6 +28,11 @@ export default function PlantCard({ plant }: PlantCardProps) {
     // Navigate to instruction page when plant image is clicked
     router.push('/instruction');
   };
+
+  const handleDevicePress = () => {
+    // Navigate to select device page when device button is clicked
+    router.push('/selectdevice');
+  };
   
   return (
     <TouchableOpacity style={styles.plantCard} onPress={handlePlantPress}>
@@ -53,6 +58,7 @@ export default function PlantCard({ plant }: PlantCardProps) {
                 plant.connected ? styles.deviceButtonActive : styles.deviceButtonInactive,
                 isPressed && styles.deviceButtonPressed
               ]}
+              onPress={handleDevicePress}
               onPressIn={() => setIsPressed(true)}
               onPressOut={() => setIsPressed(false)}
             >
@@ -120,10 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
     elevation: 3,
   },
   plantCardContent: {

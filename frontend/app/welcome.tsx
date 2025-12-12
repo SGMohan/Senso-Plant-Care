@@ -10,9 +10,7 @@ import React from "react";
 import { router } from "expo-router";
 import { connectImage1 } from "../assets";
 
-// TODO: Backend Integration - Authentication Service
-// import { checkAuthStatus, getStoredUser } from '../services/authService';
-// import { useQuery } from '@tanstack/react-query';
+// Authentication is handled by AppContext
 
 export default function WelcomeScreen() {
   // TODO: Backend Integration - Check if user is already logged in
@@ -51,7 +49,7 @@ export default function WelcomeScreen() {
       <View style={styles.container}>
         {/* Logo/Image */}
         <View style={styles.imageContainer}>
-          <Image source={connectImage1} style={styles.welcomeImage} />
+          <Image source={connectImage1} style={styles.welcomeImage} resizeMode="contain" />
         </View>
 
         {/* Welcome Content */}
@@ -99,7 +97,6 @@ const styles = StyleSheet.create({
   welcomeImage: {
     width: 250,
     height: 250,
-    resizeMode: "contain",
   },
   contentContainer: {
     alignItems: "center",
@@ -135,10 +132,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   primaryButtonText: {

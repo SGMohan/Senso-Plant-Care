@@ -38,6 +38,12 @@ export const soilImages = {
 // Connect images - Used in device connection page
 export const connectImage1 = require('./connect_image_1.png');
 
+// Device pairing images - Used in device selection
+export const deviceImages = {
+  sensoPair: require('./senso_pair.png'),
+  miniSensoPair: require('./mini_senos_pair.png'),
+};
+
 // Info images - Used in plant info status cards
 export const infoImages = {
   info1: require('./info_1.png'),
@@ -202,6 +208,16 @@ export const tasks = [
   { id: 1, title: "Water Monstera", time: "Today 4:00 PM", image: plantImages.plant1 },
   { id: 2, title: "Water Monstera", time: "Today 4:00 PM", image: plantImages.plant2 },
   { id: 3, title: "Check Snake Plant", time: "Today 6:00 PM", image: plantImages.plant1 },
+];
+
+// Task types data - Used in: app/index.tsx (tasks page)
+// Displays available task types for plant care
+export const taskTypes = [
+  { id: 1, name: 'Water', icon: infoImages.info1 },
+  { id: 2, name: 'Mist', icon: infoImages.info1 },
+  { id: 3, name: 'Clean', icon: infoImages.info1 },
+  { id: 4, name: 'Repot', icon: infoImages.info1 },
+  { id: 5, name: 'Add fertilizer', icon: infoImages.info1 },
 ];
 
 // Notifications data - Used in: app/notifications.tsx

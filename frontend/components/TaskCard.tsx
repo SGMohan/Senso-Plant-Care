@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 interface TaskCardProps {
   task: {
@@ -11,14 +12,20 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
+  const router = useRouter();
+  
   // Parse title to extract action and plant name
   // Format: "Water Monstera" -> action: "Water", plantName: "Monstera"
   const titleParts = task.title.split(" ");
   const action = titleParts[0]; // First word (e.g., "Water")
   const plantName = titleParts.slice(1).join(" "); // Rest of the words (e.g., "Monstera")
 
+  const handleTaskPress = () => {
+    router.push("/addtasks");
+  };
+
   return (
-    <View style={styles.taskCard}>
+    <TouchableOpacity style={styles.taskCard} onPress={handleTaskPress} activeOpacity={0.7}>
       <View style={styles.taskImageContainer}>
         <Image
           source={task.image}
@@ -32,7 +39,7 @@ export default function TaskCard({ task }: TaskCardProps) {
         <Text style={styles.taskPlantName}>{plantName}</Text>
         <Text style={styles.taskTime}>{task.time}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -45,14 +52,11 @@ const styles = StyleSheet.create({
     minWidth: 140,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
     elevation: 2,
   },
   taskImageContainer: {
-    backgroundColor: "#EFF3EA",
+    backgroundColor: "#ffffff",
     borderRadius: 10,
     marginRight: 12,
     width: 54,

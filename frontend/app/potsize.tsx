@@ -43,6 +43,7 @@ import {
   SafeAreaView,
   ScrollView,
   Image,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -358,10 +359,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.06)",
     elevation: 2,
   },
 
@@ -423,10 +421,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: 13,
     backgroundColor: PRIMARY_GREEN,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
+    boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.25)",
     elevation: 5,
   },
   scaleHitZones: {
@@ -505,10 +500,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 24,
     marginBottom: 110,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.05)",
     elevation: 2,
   },
   recommendationImageContainer: {
@@ -559,11 +551,16 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     paddingVertical: 16,
     alignItems: "center",
-    shadowColor: PRIMARY_GREEN,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    ...Platform.select({
+      web: { boxShadow: "0px 4px 8px rgba(12, 145, 107, 0.3)" },
+      default: {
+        shadowColor: PRIMARY_GREEN,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+      },
+    }),
   },
   continueButtonText: {
     color: "#FFFFFF",

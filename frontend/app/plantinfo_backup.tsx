@@ -442,7 +442,7 @@ export default function PlantInfoScreen() {
                       </Text>
                     </View>
                     <View style={styles.healthRightContent}>
-                      {isOnline && <RealTimeGraph isHealthStatus={true} useWaveOnly={true} />}
+                      {isOnline && <RealTimeGraph />}
                     </View>
                   </View>
                 </View>
@@ -529,7 +529,7 @@ export default function PlantInfoScreen() {
 
                     {/* TODO: Backend Integration - Pass real-time data to graph */}
                     {/* <RealTimeGraph isHealthStatus={false} useWaveOnly={true} sensorData={sensorData} timePeriod={selectedTimePeriod} /> */}
-                    <RealTimeGraph isHealthStatus={false} useWaveOnly={true} />
+                    <RealTimeGraph />
                   </View>
                 </View>
               )}
@@ -780,10 +780,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
   headerTitle: {
@@ -799,10 +796,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
     elevation: 2,
   },
   headerRight: {
@@ -840,10 +834,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#E5E7EB",
     zIndex: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
     elevation: 5,
   },
   plantImage: {
@@ -860,10 +851,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 24,
     marginTop: 0,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    boxShadow: "0px -3px 12px rgba(0, 0, 0, 0.08)",
     elevation: 8,
   },
 
@@ -901,10 +889,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.05)",
     elevation: 2,
   },
   statusIconCircle: {
@@ -989,10 +974,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   sectionTitle: {
@@ -1082,10 +1064,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   healthLabel: {
@@ -1204,10 +1183,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   waterContentLabel: {
@@ -1242,10 +1218,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   infoHeaderRow: {
@@ -1292,10 +1265,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   careGridText: {
@@ -1353,10 +1323,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: "0px -2px 8px rgba(0, 0, 0, 0.1)",
     elevation: 10,
   },
   bottomButtonsRow: {
@@ -1407,10 +1374,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 12,
     width: Dimensions.get('window').width * 0.35,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   careGuideIconContainer: {

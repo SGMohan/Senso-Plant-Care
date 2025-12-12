@@ -279,16 +279,23 @@ export default function SensoDoneScreen() {
   };
 
   const handleContinue = async () => {
+    // PAIRING DEVICE FLOW COMPLETION
+    // ==============================
+    // Pairing Device Successful? YES → Plant Management Page (MVP)
+    // Complete device setup and navigate to plant management
+    
     // TODO: Backend Integration - Complete setup and navigate to dashboard
     // await finalizeDeviceSetup();
     
-    // TODO: Backend Integration - Verify all setup steps completed
-    // if (syncStatus !== 'synced' || registrationStatus !== 'completed') {
-    //   alert('Setup not complete. Please wait for all processes to finish.');
-    //   return;
-    // }
+    // TODO: GEMINI AI INTEGRATION COMMENT:
+    // ====================================
+    // After successful device pairing, use Gemini AI to:
+    // - Analyze initial sensor readings for plant health assessment
+    // - Generate personalized care recommendations based on device data
+    // - Create automated care schedules based on plant types detected
+    // - Provide intelligent alerts and notifications
     
-    router.push("/dashboard");
+    router.push("/myplants"); // Navigate to Plant Management Page
   };
 
   // TODO: Backend Integration - Finalize Device Setup and Navigate
@@ -546,10 +553,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     marginHorizontal: 12,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   continueButtonText: {

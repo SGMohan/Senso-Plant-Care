@@ -46,6 +46,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -73,6 +74,11 @@ export default function NameYourPlantScreen() {
   };
 
   const handleAddInfo = () => {
+    // PERSONALIZED PLANT PROFILE FLOW - Detail Settings (Post-MVP)
+    // ===========================================================
+    // Decision: Detail Setting? YES → Detail Settings
+    // Navigate to detailed plant configuration
+    
     // TODO: BACKEND IMPLEMENTATION - Additional Plant Information
     // ========================================================
     // 
@@ -87,9 +93,25 @@ export default function NameYourPlantScreen() {
     // - POST /api/plants/draft with current info
     
     console.log("Add info with:", { plantName, selectedLocation });
+    
+    // Navigate to detail settings (Post-MVP features)
+    // For now, go to pot size selection as first detail setting
+    router.push({
+      pathname: "/potsize",
+      params: {
+        plantName,
+        location: selectedLocation,
+        fromDetailSettings: "true"
+      }
+    });
   };
 
   const handleAddPlant = () => {
+    // PERSONALIZED PLANT PROFILE FLOW - Direct Plant Addition
+    // ======================================================
+    // Decision: Detail Setting? NO → Finish Setting → Return to Homepage
+    // Create plant profile and return to dashboard
+    
     // TODO: BACKEND IMPLEMENTATION - Create Plant Profile
     // =================================================
     // 
@@ -106,6 +128,18 @@ export default function NameYourPlantScreen() {
     // - Add plant to user's dashboard
     
     console.log("Add plant with:", { plantName, selectedLocation });
+    
+    // Show success message and navigate to dashboard
+    Alert.alert(
+      "Plant Added Successfully! 🌱",
+      `${plantName} has been added to your ${selectedLocation}`,
+      [
+        {
+          text: "View Plant",
+          onPress: () => router.push("/dashboard")
+        }
+      ]
+    );
   };
 
   return (
@@ -298,10 +332,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.06)",
     elevation: 2,
   },
 
@@ -328,17 +359,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageCircle: {
-    width: 300,
-    height: 300,
-    borderRadius: 110,
+    width: 280,
+    height: 280,
+    borderRadius: 140,
     backgroundColor: "#E6F1E7",
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
+    boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.12)",
     elevation: 6,
   },
   plantImage: {
@@ -430,10 +458,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    boxShadow: "0px -3px 8px rgba(0, 0, 0, 0.08)",
     elevation: 10,
   },
   bottomButton: {
