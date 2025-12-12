@@ -1,8 +1,8 @@
-import express from 'express';
-import UserModel from '../models/auth.model.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { verifyToken } from '../middleware/auth.middleware.js';
+import express from "express";
+import UserModel from "../models/auth.model.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const AuthRouter = express.Router();
 
@@ -14,7 +14,6 @@ AuthRouter.get("/", async (_, res) => {
     success: true,
   });
 });
-
 
 //register
 AuthRouter.post("/register", async (req, res) => {
@@ -39,19 +38,19 @@ AuthRouter.post("/register", async (req, res) => {
     req.body.password = hashedpassowrd;
 
     const user = await UserModel.create(req.body);
-    
+
     // Generate token for auto-login after registration
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES,
     });
-    
+
     return res.status(201).json({
       message: "Register successfully",
       success: true,
-      data: { 
+      data: {
         id: user._id,
-        name: user.name, 
-        email: user.email 
+        name: user.name,
+        email: user.email,
       },
       token: token,
     });
@@ -61,8 +60,7 @@ AuthRouter.post("/register", async (req, res) => {
       success: false,
       error: error.message,
     });
-    }
-    
+  }
 });
 
 //login
@@ -139,6 +137,6 @@ AuthRouter.post("/logout", verifyToken, async (req, res) => {
 
 //forgot-password
 //reset-password
-//get user by id 
+//get user by id
 
 export default AuthRouter;

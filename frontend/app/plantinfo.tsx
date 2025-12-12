@@ -478,10 +478,10 @@ export default function PlantInfoScreen() {
                             { id: "moisture", label: "Soil Moisture", icon: "water", color: "#3b82f6" },
                             { id: "temperature", label: "Temperature", icon: "thermometer", color: "#ef4444" },
                             { id: "light", label: "Light", icon: "sunny", color: "#eab308" },
-                          ].map((metric) => (
+                          ].map((metric, index) => (
                             <TouchableOpacity
                               key={metric.id}
-                              style={styles.dropdownItem}
+                              style={[styles.dropdownItem, index === 2 && { borderBottomWidth: 0 }]}
                               onPress={() => {
                                 setSelectedMetric(metric.id);
                                 setDropdownOpen(false);
@@ -562,8 +562,8 @@ export default function PlantInfoScreen() {
                       <View>
                         <Text style={styles.waterContentLabel}>
                           {selectedMetric === "moisture" ? "Volumetric Water Content :" :
-                           selectedMetric === "temperature" ? "Ambient Temperature :" :
-                           "Light Amount (DLI) :"}
+                           selectedMetric === "temperature" ? "Ambient :" :
+                           "Amount (DLI) :"}
                         </Text>
                         <Text style={styles.waterContentValue}>
                           {selectedMetric === "moisture" ? "45%" :
@@ -571,7 +571,7 @@ export default function PlantInfoScreen() {
                            "12.5 mol"}
                         </Text>
                         <Text style={styles.waterContentRange}>
-                          {selectedMetric === "moisture" ? "Volumetric" :
+                          {selectedMetric === "moisture" ? "Range" :
                            selectedMetric === "temperature" ? "Range" :
                            "Received today"}
                         </Text>
@@ -586,7 +586,7 @@ export default function PlantInfoScreen() {
                     </View>
 
                     {/* Dynamic graph based on selected metric */}
-                    <SimpleGraph />
+                    <SimpleGraph selectedMetric={selectedMetric} selectedPeriod={selectedTimePeriod} />
                   </View>
 
                   {/* Dynamic Summary Cards */}
@@ -619,10 +619,10 @@ export default function PlantInfoScreen() {
                       <>
                         <View style={styles.careSummaryCard}>
                           <Text style={styles.careSummaryTitle}>Trend</Text>
-                          <Text style={styles.careSummaryDate}>↗ Increasing</Text>
+                          <Text style={styles.careSummaryDate}>↗ 2 %</Text>
                         </View>
                         <View style={styles.careSummaryCard}>
-                          <Text style={styles.careSummaryTitle}>Avg. hours</Text>
+                          <Text style={styles.careSummaryTitle}>Avg. hours of light :</Text>
                           <Text style={styles.careSummaryDate}>8.5 hours</Text>
                         </View>
                       </>
@@ -1355,8 +1355,7 @@ const styles = StyleSheet.create({
   waterContentValue: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#2d5a3d",
-    marginBottom: 2,
+    marginBottom: 4,
   },
   waterContentRange: {
     fontSize: 12,

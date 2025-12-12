@@ -78,16 +78,7 @@ export default function LoginScreen() {
     router.push('/signup');
   };
 
-  const handleForgotPassword = () => {
-    // TODO: Backend Integration - Password reset flow
-    // if (!email) {
-    //   Alert.alert('Email Required', 'Please enter your email address first.');
-    //   return;
-    // }
-    // 
-    // forgotPasswordMutation.mutate(email);
-    console.log("Forgot password pressed");
-  };
+
 
   // TODO: Backend Integration - Biometric authentication
   const handleBiometricLogin = async () => {
@@ -99,15 +90,7 @@ export default function LoginScreen() {
     console.log('Biometric login attempted');
   };
 
-  // TODO: Backend Integration - Social login integration
-  const handleSocialLogin = (provider: 'google' | 'apple' | 'facebook') => {
-    // initiateSocialAuth(provider).then((result) => {
-    //   if (result.success) {
-    //     router.replace('/dashboard');
-    //   }
-    // });
-    console.log('Social login:', provider);
-  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -166,10 +149,7 @@ export default function LoginScreen() {
                 />
               </View>
 
-              {/* Forgot Password */}
-              <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
+
             </View>
 
             {/* Sign In Button */}
@@ -182,6 +162,8 @@ export default function LoginScreen() {
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </Text>
             </TouchableOpacity>
+
+
 
             {/* Signup Link */}
             <View style={styles.signupContainer}>
@@ -278,15 +260,7 @@ const styles = StyleSheet.create({
     borderColor: "#e2e8e4",
     fontFamily: "Inter",
   },
-  forgotPassword: {
-    alignSelf: "flex-end",
-  },
-  forgotPasswordText: {
-    fontSize: 12,
-    color: "#2d5a3d",
-    fontWeight: "400",
-    fontFamily: "Inter",
-  },
+
   loginButton: {
     backgroundColor: "#2d5a3d",
     borderRadius: 16,

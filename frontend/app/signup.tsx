@@ -99,6 +99,8 @@ export default function SignupScreen() {
     console.log('Password strength check:', pwd.length);
   };
 
+
+
   const handleLoginNavigation = () => {
     router.push('/login');
   };
@@ -196,6 +198,8 @@ export default function SignupScreen() {
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Text>
             </TouchableOpacity>
+
+
 
             {/* Login Link */}
             <View style={styles.loginContainer}>

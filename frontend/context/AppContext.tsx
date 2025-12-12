@@ -1,10 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Backend API URL - Mobile compatible
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL 
-  ? `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/auth`
-  : 'http://localhost:3000/api/auth';
+import { loginUser, registerUser, logoutUser } from '../services/authService';
 
 // User interface
 interface User {
@@ -59,33 +55,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
+      const data = await loginUser({ email, password });
 
       // Store auth data
-      await AsyncStorage.setItem('authToken', data.token);
+      await AsyncStorage.setItem('authToken', data.token!);
       await AsyncStorage.setItem('userData', JSON.stringify(data.data));
       
-      setToken(data.token);
-      setUser(data.data);
+      setToken(data.token!);
+      setUser(data.data!);
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -98,26 +75,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (name: string, email: string, password: string): Promise<void> => {
     try {
       setIsLoading(true);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
-      const response = await fetch(`${API_BASE_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
+      const data = await registerUser({ name, email, password });
 
       // Registration returns token, so set auth state directly
       if (data.token && data.data) {
@@ -135,17 +93,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+
+
   // Logout function
   const logout = async (): Promise<void> => {
     try {
       // Call backend logout if token exists
       if (token) {
-        await fetch(`${API_BASE_URL}/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        await logoutUser(token);
       }
     } catch (error) {
       console.error('Logout API error:', error);
