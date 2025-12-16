@@ -1,15 +1,21 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loginUser, registerUser, logoutUser } from '../services/authService';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { loginUser, registerUser, logoutUser } from "../services/authService";
 
-// User interface
+/* ---------------- TYPES ---------------- */
+
 interface User {
   id: string;
   name: string;
   email: string;
 }
 
-// Auth context interface
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -20,103 +26,105 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-// Create context
+/* ---------------- CONTEXT ---------------- */
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Auth provider component
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+/* ---------------- PROVIDER ---------------- */
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check stored auth on app start
+  /* ---------- Restore session ---------- */
   useEffect(() => {
-    checkStoredAuth();
+    restoreSession();
   }, []);
 
-  // Check stored authentication
-  const checkStoredAuth = async () => {
+  const restoreSession = async () => {
     try {
-      const storedToken = await AsyncStorage.getItem('authToken');
-      const storedUser = await AsyncStorage.getItem('userData');
-      
+      const storedToken = await AsyncStorage.getItem("authToken");
+      const storedUser = await AsyncStorage.getItem("userData");
+
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       }
-    } catch (error) {
-      console.error('Auth check failed:', error);
+    } catch (err) {
+      console.error("Restore auth failed:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Login function
-  const login = async (email: string, password: string): Promise<void> => {
+  /* ---------- LOGIN ---------- */
+  const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const data = await loginUser({ email, password });
 
-      // Store auth data
-      await AsyncStorage.setItem('authToken', data.token!);
-      await AsyncStorage.setItem('userData', JSON.stringify(data.data));
-      
-      setToken(data.token!);
-      setUser(data.data!);
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      const res = await loginUser({ email, password });
 
-  // Register function
-  const register = async (name: string, email: string, password: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      const data = await registerUser({ name, email, password });
-
-      // Registration returns token, so set auth state directly
-      if (data.token && data.data) {
-        await AsyncStorage.setItem('authToken', data.token);
-        await AsyncStorage.setItem('userData', JSON.stringify(data.data));
-        
-        setToken(data.token);
-        setUser(data.data);
+      if (!res.token || !res.data) {
+        throw new Error("Invalid login response");
       }
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
+
+      await AsyncStorage.multiSet([
+        ["authToken", res.token],
+        ["userData", JSON.stringify(res.data)],
+      ]);
+
+      setToken(res.token);
+      setUser(res.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-
-
-  // Logout function
-  const logout = async (): Promise<void> => {
+  /* ---------- REGISTER ---------- */
+  const register = async (name: string, email: string, password: string) => {
     try {
-      // Call backend logout if token exists
+      setIsLoading(true);
+
+      const res = await registerUser({ name, email, password });
+
+      if (!res.token || !res.data) {
+        throw new Error("Invalid register response");
+      }
+
+      await AsyncStorage.multiSet([
+        ["authToken", res.token],
+        ["userData", JSON.stringify(res.data)],
+      ]);
+
+      setToken(res.token);
+      setUser(res.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /* ---------- LOGOUT ---------- */
+  const logout = async () => {
+    try {
       if (token) {
         await logoutUser(token);
       }
-    } catch (error) {
-      console.error('Logout API error:', error);
+    } catch (err) {
+      console.warn("Logout API failed:", err);
     } finally {
-      // Clear local storage regardless of API call result
-      await AsyncStorage.multiRemove(['authToken', 'userData']);
-      setToken(null);
+      await AsyncStorage.multiRemove(["authToken", "userData"]);
       setUser(null);
+      setToken(null);
     }
   };
 
+  /* ---------- CONTEXT VALUE ---------- */
   const value: AuthContextType = {
     user,
     token,
     isLoading,
-    isAuthenticated: !!token && !!user,
+    isAuthenticated: Boolean(token && user),
     login,
     register,
     logout,
@@ -125,11 +133,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Custom hook to use auth context
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+/* ---------------- HOOK ---------------- */
+
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used inside AuthProvider");
   }
-  return context;
+  return ctx;
 };

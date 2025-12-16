@@ -1,7 +1,11 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    googleId: {
+      type: String,
+      default: null,
+    },
     name: {
       type: String,
       required: [true, "Please provide a username"],
@@ -44,4 +48,4 @@ const userSchema = new mongoose.Schema(
 
 const UserModel = mongoose.model("users", userSchema);
 console.log("User Model Created Successfully", UserModel);
-export default UserModel;
+module.exports = UserModel;

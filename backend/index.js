@@ -1,8 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import dotenv from 'dotenv';
-import AuthRouter from './controllers/auth.controller.js';
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db.js');
+const dotenv = require('dotenv');
+const AuthRouter = require('./controllers/auth.controller.js');
+const PlantRouter = require('./controllers/plant.controller.js');
+const PlantConversationRouter = require('./controllers/plantconversation.controller.js');
+const { GoogleAuth } = require('google-auth-library');
 
 dotenv.config();
 
@@ -30,11 +33,13 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 //Routes
 app.use("/api/auth", AuthRouter);
+// app.use("/api/plant", PlantRouter);
+// app.use("/plant", PlantConversationRouter);
 
 // Start the server
 app.listen(process.env.PORT, process.env.HOSTNAME, () => {
@@ -57,7 +62,13 @@ app.get("/api", (_, res) => {
       auth: "/api/auth",
       register: "/api/auth/register",
       login: "/api/auth/login",
-      logout: "/api/auth/logout"
+      logout: "/api/auth/logout",
+      // forgotPassword: "/api/auth/forgot-password",
+      // resetPassword: "/api/auth/reset-password/:token",
+      // googleAuth: "/api/auth/google",
+      // googleCallback: "/api/auth/google/callback",
+      // plant: "/api/plant",
+      // identify: "/api/plant/identify"
     }
   });
 });
