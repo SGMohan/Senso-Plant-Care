@@ -1,165 +1,106 @@
-// TODO: Backend Integration - Device Connection Service API calls
-// This file will handle all device connection and management API communications
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-export interface SensoDevice {
-  id: string;
-  name: string;
-  type: 'senso-v1' | 'senso-v2';
-  batteryLevel: number;
-  signalStrength: number;
-  isConnected: boolean;
-  lastSeen: string;
-  macAddress: string;
-  firmwareVersion: string;
-}
+const getAuthHeader = async () => {
+  const token = await AsyncStorage.getItem("authToken");
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 export interface DeviceConnectionStatus {
-  status: 'idle' | 'scanning' | 'connecting' | 'connected' | 'failed';
+  success: boolean;
   deviceId?: string;
-  error?: string;
+  status?: 'ONLINE' | 'OFFLINE' | 'DISCONNECTED';
+  isOnline?: boolean;
+  lastSeen?: string;
+  lastData?: {
+    sh: number;
+    t: number;
+    lx: number;
+    bp: number;
+  };
 }
-
-// TODO: Implement Bluetooth/WiFi device scanning
-export const scanForDevices = async (): Promise<SensoDevice[]> => {
-  try {
-    // const response = await fetch(`${API_BASE_URL}/devices/scan`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   }
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to scan for devices');
-    // }
-    // 
-    // return await response.json();
-    
-    // Temporary: Return mock devices
-    throw new Error('Device scanning not implemented yet');
-  } catch (error) {
-    console.error('Error scanning for devices:', error);
-    throw error;
-  }
-};
-
-export const connectToDevice = async (deviceId: string): Promise<DeviceConnectionStatus> => {
-  try {
-    // const response = await fetch(`${API_BASE_URL}/devices/${deviceId}/connect`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   }
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to connect to device');
-    // }
-    // 
-    // return await response.json();
-    
-    console.log('Connect to device:', deviceId);
-    return { status: 'connected', deviceId };
-  } catch (error) {
-    console.error('Error connecting to device:', error);
-    throw error;
-  }
-};
-
-export const disconnectDevice = async (deviceId: string): Promise<void> => {
-  try {
-    // const response = await fetch(`${API_BASE_URL}/devices/${deviceId}/disconnect`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   }
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to disconnect device');
-    // }
-    
-    console.log('Disconnect device:', deviceId);
-  } catch (error) {
-    console.error('Error disconnecting device:', error);
-    throw error;
-  }
-};
 
 export const getDeviceStatus = async (deviceId: string): Promise<DeviceConnectionStatus> => {
   try {
-    // const response = await fetch(`${API_BASE_URL}/devices/${deviceId}/status`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   }
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to get device status');
-    // }
-    // 
-    // return await response.json();
+    const headers = await getAuthHeader();
+    const response = await fetch(`${API_BASE_URL}/api/device/${deviceId}/status`, {
+      method: 'GET',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      }
+    });
     
-    console.log('Get device status:', deviceId);
-    return { status: 'idle' };
+    if (!response.ok) {
+      throw new Error('Failed to get device status');
+    }
+    
+    return await response.json();
   } catch (error) {
     console.error('Error getting device status:', error);
     throw error;
   }
 };
 
-export const getConnectedDevices = async (): Promise<SensoDevice[]> => {
+export const getDeviceHistory = async (deviceId: string, period: string) => {
   try {
-    // const response = await fetch(`${API_BASE_URL}/devices/connected`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   }
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to get connected devices');
-    // }
-    // 
-    // return await response.json();
+    const headers = await getAuthHeader();
+    const response = await fetch(`${API_BASE_URL}/api/device/${deviceId}/history?period=${period}`, {
+      method: 'GET',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      }
+    });
     
-    console.log('Get connected devices');
-    return [];
+    if (!response.ok) {
+      throw new Error('Failed to get device history');
+    }
+    
+    return await response.json();
   } catch (error) {
-    console.error('Error getting connected devices:', error);
+    console.error('Error getting device history:', error);
     throw error;
   }
 };
 
-export const updateDeviceSettings = async (deviceId: string, settings: any): Promise<void> => {
+export const sendSceneCommand = async (deviceId: string, sceneId: string) => {
   try {
-    // const response = await fetch(`${API_BASE_URL}/devices/${deviceId}/settings`, {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${getAuthToken()}`
-    //   },
-    //   body: JSON.stringify(settings)
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Failed to update device settings');
-    // }
+    const headers = await getAuthHeader();
+    const response = await fetch(`${API_BASE_URL}/api/device/${deviceId}/scene`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ scene_id: sceneId })
+    });
     
-    console.log('Update device settings:', deviceId, settings);
+    return await response.json();
   } catch (error) {
-    console.error('Error updating device settings:', error);
+    console.error('Error sending scene command:', error);
     throw error;
   }
 };
 
-// TODO: Implement authentication token management
-const getAuthToken = (): string => {
-  // return AsyncStorage.getItem('authToken') || '';
-  return '';
+export const sendThresholdCommand = async (deviceId: string, thresholds: any) => {
+  try {
+    const headers = await getAuthHeader();
+    const response = await fetch(`${API_BASE_URL}/api/device/${deviceId}/thresholds`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ thresholds })
+    });
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error sending threshold command:', error);
+    throw error;
+  }
 };

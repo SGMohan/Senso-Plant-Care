@@ -1,10 +1,9 @@
 import { Redirect } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AppContext';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 export default function Index() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isLoading } = useAuth();
 
   // Show loading while checking auth status
   if (isLoading) {
@@ -15,12 +14,12 @@ export default function Index() {
     );
   }
 
-  // Redirect based on authentication status
-  if (isAuthenticated) {
-    return <Redirect href="/dashboard" />;
-  } else {
-    return <Redirect href="/welcome" />;
-  }
+  // Always start at dashboard as requested
+  // if (!isAuthenticated) {
+  //   return <Redirect href="/dashboard/welcome" />;
+  // }
+
+  return <Redirect href="/dashboard" />;
 }
 
 const styles = StyleSheet.create({
@@ -31,6 +30,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f4f0',
   },
 });
-
-
-

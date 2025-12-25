@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -12,7 +11,7 @@ export default function BottomNavigation({ activeTab, setActiveTab }: BottomNavi
   return (
     <View style={styles.bottomNav}>
       <TouchableOpacity
-        style={[styles.navItem, activeTab === "home" && styles.activeNavItem]}
+        style={styles.navItem}
         onPress={() => setActiveTab("home")}
       >
         <Ionicons
@@ -21,36 +20,31 @@ export default function BottomNavigation({ activeTab, setActiveTab }: BottomNavi
           color={activeTab === "home" ? "#2d5a3d" : "#9ca3af"}
         />
       </TouchableOpacity>
+      
       <TouchableOpacity
-        style={[styles.navItem, activeTab === "add" && styles.activeNavItem]}
-        onPress={() => {
-          // PAIRING DEVICE FLOW - Decision: Pairing Device?
-          // YES → Pair Sensor via Bluetooth
-          // NO → Return to Plant Management Page (MVP)
-          router.push('/connectdevice');
-        }}
+        style={styles.navItem}
+        onPress={() => setActiveTab("add")}
       >
         <Ionicons
           name="add"
-          size={24}
+          size={32}
           color={activeTab === "add" ? "#2d5a3d" : "#9ca3af"}
         />
       </TouchableOpacity>
+      
       <TouchableOpacity
-        style={[styles.navItem, activeTab === "leaf" && styles.activeNavItem]}
-        onPress={() => router.push('/scanner')}
+        style={styles.navItem}
+        onPress={() => setActiveTab("my-plants")}
       >
         <Ionicons
-          name={activeTab === "leaf" ? "leaf" : "leaf-outline"}
+          name={activeTab === "my-plants" ? "leaf" : "leaf-outline"}
           size={24}
-          color={activeTab === "leaf" ? "#2d5a3d" : "#9ca3af"}
+          color={activeTab === "my-plants" ? "#2d5a3d" : "#9ca3af"}
         />
       </TouchableOpacity>
+      
       <TouchableOpacity
-        style={[
-          styles.navItem,
-          activeTab === "profile" && styles.activeNavItem,
-        ]}
+        style={styles.navItem}
         onPress={() => setActiveTab("profile")}
       >
         <Ionicons
@@ -71,19 +65,14 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: "row",
     backgroundColor: "white",
-    paddingVertical: 28,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     justifyContent: "space-around",
-    ...Platform.select({
-      web: { boxShadow: "0px -2px 8px rgba(0, 0, 0, 0.1)" },
-      default: {
-        elevation: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderTopWidth: 1,
@@ -92,9 +81,6 @@ const styles = StyleSheet.create({
   navItem: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 4,
-  },
-  activeNavItem: {
-    backgroundColor: "transparent",
+    padding: 10,
   },
 });

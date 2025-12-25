@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="02624b3b-7138-4709-b943-3a4e42a08918" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/history.model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/models/notification.model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/notification.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/plant.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/utils/pushNotifications.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/services/plantService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/passport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/plant.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/plant.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/plantconversation.controller.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/middleware/plant.middleware.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/auth.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/auth.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/plant.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/plant.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/plantconversation.model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/addtasks.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/camera.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/connectdevice.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/dashboard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/forgetpassword.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/instruction.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/login.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/myplants.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/nameplant.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/notifications.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/plantinfo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/plantinfo_backup.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/potsize.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/profile.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/resetpassword.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/scanner.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/selectdevice.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/sensoconnect.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/sensodone.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/signup.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/soiltype.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/welcome.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/wifiselect.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/add_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/big_plant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/connect_image_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/correct_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/droplet_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/fertilizer_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/home_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/images/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/info_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/info_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/info_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/instruction_sample_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/large_pot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/leaf_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/lock_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/lock_icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/mail_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/mail_icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/medium_pot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/mini_senos_pair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/myplant_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/myplant_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/myplant_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/myplant_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/myplant_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/notification_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/notify_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/person_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/person_icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/plant_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/plant_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/plant_profile_sample_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/recommend_plant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/sample.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/senso_pair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/share_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/small_pot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/soil_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/soil_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/soil_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/soil_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/soil_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/sunlight_alert_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/user_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/water_alert_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/water_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/welcome-plant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/wifi_pair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/wifi_pair_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/wifi_pair_sample.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/BottomNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/BottomNavigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/HealthStatus.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/HealthStatus.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/PlantCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/PlantCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/TaskCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/TaskCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/context/AppContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/context/AppContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/dashboard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/metro.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/authService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/services/deviceService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/deviceService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/start-servers.bat" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="37L4RZVAL740XdHsqPe2k9f7fug" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="02624b3b-7138-4709-b943-3a4e42a08918" name="Changes" comment="" />
+      <created>1766669012167</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1766669012167</updated>
+    </task>
+    <servers />
+  </component>
+</project>

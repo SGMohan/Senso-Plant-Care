@@ -1,46 +1,40 @@
 {
   "expo": {
     "name": "Senso Plant Care",
-    "slug": "senso-plant-care",
+    "slug": "sensoplantcare",
+    "scheme": "sensoplantcare",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "senso",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.mohansg.sensoplantcare",
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "package": "com.sensoplantcare.app",
+      "package": "com.mohansg.sensoplantcare",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "bundler": "metro",
-      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow Senso Plant Care to access your camera to identify plants."
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    "extra": {
+      "eas": {
+        "projectId": "99bcad75-537f-4893-a3c1-ebf96c9a681d"
+      }
+    },
+    "owner": "suvarajdemo"
   }
 }

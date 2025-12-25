@@ -1,144 +1,173 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { loginUser, registerUser, logoutUser } from "../services/authService";
-
-/* ---------------- TYPES ---------------- */
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
+  googleBackendLogin,
+} from "../services/authService";
+import { useGoogleLogin } from "../hooks/useGoogleLogin";
+import { router } from "expo-router";
 
 interface User {
   id: string;
   name: string;
   email: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  isLoading: boolean;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  googleAuth: () => Promise<void>;
   logout: () => Promise<void>;
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
 }
-
-/* ---------------- CONTEXT ---------------- */
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/* ---------------- PROVIDER ---------------- */
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  /* ---------- Restore session ---------- */
+  const { promptAsync: googlePrompt } = useGoogleLogin(
+    async (idToken: string) => {
+      try {
+        const data = await googleBackendLogin(idToken);
+
+        await AsyncStorage.multiSet([
+          ["authToken", data.token],
+          ["userData", JSON.stringify(data.data)],
+        ]);
+
+        setToken(data.token);
+        setUser(data.data);
+        router.replace("/(tabs)/dashboard");
+      } catch (err) {
+        console.error("Google Login Backend Error:", err);
+      }
+    }
+  );
+
+  /* AUTO LOGIN */
   useEffect(() => {
-    restoreSession();
+    (async () => {
+      try {
+        const savedToken = await AsyncStorage.getItem("authToken");
+        const savedUser = await AsyncStorage.getItem("userData");
+
+        if (savedToken && savedUser) {
+          setToken(savedToken);
+          setUser(JSON.parse(savedUser));
+        }
+      } catch (err) {
+        console.log("Auto-login failed:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, []);
 
-  const restoreSession = async () => {
-    try {
-      const storedToken = await AsyncStorage.getItem("authToken");
-      const storedUser = await AsyncStorage.getItem("userData");
-
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (err) {
-      console.error("Restore auth failed:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* ---------- LOGIN ---------- */
+  /* EMAIL LOGIN */
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-
-      const res = await loginUser({ email, password });
-
-      if (!res.token || !res.data) {
-        throw new Error("Invalid login response");
-      }
+      const data = await loginUser({ email, password });
 
       await AsyncStorage.multiSet([
-        ["authToken", res.token],
-        ["userData", JSON.stringify(res.data)],
+        ["authToken", data.token],
+        ["userData", JSON.stringify(data.data)],
       ]);
 
-      setToken(res.token);
-      setUser(res.data);
+      setToken(data.token);
+      setUser(data.data);
+      router.replace("/(tabs)/dashboard");
     } finally {
       setIsLoading(false);
     }
   };
 
-  /* ---------- REGISTER ---------- */
+  /* REGISTER */
   const register = async (name: string, email: string, password: string) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-
-      const res = await registerUser({ name, email, password });
-
-      if (!res.token || !res.data) {
-        throw new Error("Invalid register response");
-      }
+      const data = await registerUser({ name, email, password });
 
       await AsyncStorage.multiSet([
-        ["authToken", res.token],
-        ["userData", JSON.stringify(res.data)],
+        ["authToken", data.token],
+        ["userData", JSON.stringify(data.data)],
       ]);
 
-      setToken(res.token);
-      setUser(res.data);
+      setToken(data.token);
+      setUser(data.data);
+      router.replace("/(tabs)/dashboard");
     } finally {
       setIsLoading(false);
     }
   };
 
-  /* ---------- LOGOUT ---------- */
-  const logout = async () => {
+  /* GOOGLE LOGIN */
+  const googleAuth = async () => {
+    setIsLoading(true);
     try {
-      if (token) {
-        await logoutUser(token);
-      }
+      await googlePrompt();
     } catch (err) {
-      console.warn("Logout API failed:", err);
+      console.error("Google Auth Prompt Error:", err);
     } finally {
-      await AsyncStorage.multiRemove(["authToken", "userData"]);
-      setUser(null);
-      setToken(null);
+      setIsLoading(false);
     }
   };
 
-  /* ---------- CONTEXT VALUE ---------- */
-  const value: AuthContextType = {
-    user,
-    token,
-    isLoading,
-    isAuthenticated: Boolean(token && user),
-    login,
-    register,
-    logout,
+  /* LOGOUT */
+  const logout = async () => {
+    const currentToken = token;
+    
+    // UI immediate update for better UX
+    setUser(null);
+    setToken(null);
+    await AsyncStorage.multiRemove(["authToken", "userData"]);
+    
+    // Redirect first
+    router.replace("/login");
+
+    // Then try to notify backend
+    if (currentToken) {
+      try {
+        await logoutUser(currentToken);
+      } catch (err) {
+        console.warn("Backend logout failed, but local session cleared", err);
+      }
+    }
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isAuthenticated: !!token,
+        isLoading,
+        login,
+        register,
+        googleAuth,
+        logout,
+        setUser,
+        setToken,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
-
-/* ---------------- HOOK ---------------- */
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
+  if (!ctx) throw new Error("useAuth must be inside AuthProvider");
   return ctx;
 };

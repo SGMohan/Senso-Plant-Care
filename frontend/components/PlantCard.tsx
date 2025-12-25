@@ -1,18 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { Image } from 'expo-image';
+import Text from './ui/Text';
 
 interface PlantCardProps {
   plant: {
-    id: number;
+    _id?: string;
+    id?: number | string;
     name: string;
-    type: string;
+    scientificName?: string;
+    type?: string;
     moisture?: number;
     temperature?: number;
     distance?: string;
     connected: boolean;
     image: any;
+    status?: string;
+    needsWater?: boolean;
   };
 }
 
@@ -20,99 +26,80 @@ export default function PlantCard({ plant }: PlantCardProps) {
   const [isPressed, setIsPressed] = React.useState(false);
   
   const handlePlantPress = () => {
-    // TODO: Backend Integration - Pass plant ID and instruction type as params
-    router.push('/plantinfo');
-  };
-
-  const handleImagePress = () => {
-    // Navigate to instruction page when plant image is clicked
-    router.push('/instruction');
+    // Navigate to the plant info page inside the plants directory
+    router.push({
+      pathname: '/plants/plantinfo',
+      params: { plantId: plant._id || plant.id }
+    });
   };
 
   const handleDevicePress = () => {
-    // Navigate to select device page when device button is clicked
-    router.push('/selectdevice');
+    // Navigate to device connection flow (Corrected path)
+    router.push('/devices/connectdevice');
   };
   
   return (
-    <TouchableOpacity style={styles.plantCard} onPress={handlePlantPress}>
+    <TouchableOpacity style={styles.plantCard} onPress={handlePlantPress} activeOpacity={0.9}>
       <View style={styles.plantCardContent}>
-        <TouchableOpacity style={styles.plantImageContainer} onPress={handleImagePress}>
+        {/* Left Side: Plant Image */}
+        <View style={styles.plantImageContainer}>
           <Image 
-            source={plant.image} 
+            source={typeof plant.image === 'string' ? { uri: plant.image } : plant.image} 
             style={styles.plantImage}
-            resizeMode="cover"
-            fadeDuration={0}
-            loadingIndicatorSource={require('../assets/plant_1.png')}
+            contentFit="cover"
+            transition={300}
           />
-        </TouchableOpacity>
+        </View>
+
+        {/* Right Side: Info and Metrics */}
         <View style={styles.plantInfo}>
-          <View style={styles.plantInfoRow}>
-            <View style={styles.plantNameContainer}>
-              <Text style={styles.plantName}>{plant.name}</Text>
-              <Text style={styles.plantType}>{plant.type}</Text>
+          <View style={styles.headerRow}>
+            <View style={styles.textContainer}>
+              <Text weight="bold" style={styles.plantName} numberOfLines={1}>{plant.name}</Text>
+              <Text variant="caption" style={styles.scientificName} numberOfLines={1}>
+                {plant.scientificName || plant.type || "Scientific Name"}
+              </Text>
             </View>
+            
             <TouchableOpacity 
               style={[
                 styles.deviceButton,
-                plant.connected ? styles.deviceButtonActive : styles.deviceButtonInactive,
                 isPressed && styles.deviceButtonPressed
               ]}
               onPress={handleDevicePress}
               onPressIn={() => setIsPressed(true)}
               onPressOut={() => setIsPressed(false)}
             >
-              <Text style={[
-                styles.deviceButtonText,
-                plant.connected ? styles.deviceButtonTextActive : styles.deviceButtonTextInactive
-              ]}>Device</Text>
+              <Text weight="medium" style={styles.deviceButtonText}>Device</Text>
             </TouchableOpacity>
           </View>
-          
-          {plant.connected ? (
-            <View style={styles.plantMetrics}>
-              <View style={styles.metricItem}>
-                <View style={styles.metricIconContainer}>
-                  <Ionicons name="water" size={20} color="#3b82f6" />
-                </View>
-                <Text style={styles.metricValue}>{plant.moisture}%</Text>
+
+          {/* Metrics Row */}
+          <View style={styles.metricsRow}>
+            <View style={styles.metricItem}>
+              <View style={styles.metricIconCircle}>
+                <Ionicons name="water" size={22} color="#3b82f6" />
               </View>
-              <View style={styles.metricItem}>
-                <View style={styles.metricIconContainer}>
-                  <Ionicons name="thermometer" size={20} color="#ef4444" />
-                </View>
-                <Text style={styles.metricValue}>
-                  {plant.temperature}°C
-                </Text>
-              </View>
-              <View style={styles.metricItem}>
-                <View style={styles.metricIconContainer}>
-                  <MaterialIcons
-                    name="straighten"
-                    size={20}
-                    color="#eab308"
-                  />
-                </View>
-                <Text style={styles.metricValue}>{plant.distance}</Text>
-              </View>
+              <Text weight="semibold" style={styles.metricValue}>{plant.connected ? `${plant.moisture || 0}%` : "--"}</Text>
             </View>
-          ) : (
-            <>
-              <View style={styles.plantMetrics}>
-                <View style={styles.metricIconContainer}>
-                  <Ionicons name="water" size={24} color="#93c5fd" />
-                </View>
-                <View style={styles.metricIconContainer}>
-                  <Ionicons name="thermometer" size={24} color="#fca5a5" />
-                </View>
-                <View style={styles.metricIconContainer}>
-                  <Ionicons name="alert-circle" size={24} color="#fde047" />
-                </View>
+            
+            <View style={styles.metricItem}>
+              <View style={styles.metricIconCircle}>
+                <Ionicons name="thermometer" size={22} color="#ef4444" />
               </View>
-              <Text style={styles.waitingText}>
-                Waiting for senso to connect
-              </Text>
-            </>
+              <Text weight="semibold" style={styles.metricValue}>{plant.connected ? `${plant.temperature || 0}°C` : "--"}</Text>
+            </View>
+            
+            <View style={styles.metricItem}>
+              <View style={styles.metricIconCircle}>
+                <Ionicons name="sunny" size={22} color="#facc15" />
+              </View>
+              <Text weight="semibold" style={styles.metricValue}>{plant.connected ? (plant.distance || "0.2 DLI") : "--"}</Text>
+            </View>
+          </View>
+          
+          {!plant.connected && (
+            <Text variant="caption" style={styles.waitingText}>Waiting for senso to connect...</Text>
           )}
         </View>
       </View>
@@ -123,21 +110,26 @@ export default function PlantCard({ plant }: PlantCardProps) {
 const styles = StyleSheet.create({
   plantCard: {
     backgroundColor: "white",
-    borderRadius: 16,
+    borderRadius: 24,
     padding: 16,
-    marginBottom: 12,
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 3,
+    marginBottom: 16,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
   },
   plantCardContent: {
     flexDirection: "row",
-    gap: 16,
+    alignItems: 'center',
   },
   plantImageContainer: {
-    width: 120,
+    width: 100,
     height: 120,
-    borderRadius: 12,
-    overflow: "hidden",
+    borderRadius: 12, 
+    overflow: 'hidden', 
+    marginRight: 12,
+    backgroundColor: '#F3F3F3',
   },
   plantImage: {
     width: "100%",
@@ -146,82 +138,62 @@ const styles = StyleSheet.create({
   plantInfo: {
     flex: 1,
   },
-  plantInfoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
   },
-  plantNameContainer: {
+  textContainer: {
     flex: 1,
+    marginRight: 8,
   },
   plantName: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#1a3c2a",
-    fontFamily: "Inter",
+    fontSize: 22,
+    color: "#1a1a1a",
   },
-  plantType: {
-    fontSize: 14,
-    fontWeight: "400",
-    color: "#6b8a7a",
+  scientificName: {
+    color: "#888",
     marginTop: 2,
-    fontFamily: "Inter",
   },
   deviceButton: {
-    backgroundColor: "transparent",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    backgroundColor: "#E8F0E8",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
     borderRadius: 20,
     borderWidth: 1,
-  },
-  deviceButtonActive: {
-    borderColor: "#3E4E2F",
-  },
-  deviceButtonInactive: {
-    borderColor: "#3E4E2F",
+    borderColor: "#4A634A",
   },
   deviceButtonPressed: {
-    backgroundColor: "#E8F5E8",
+    backgroundColor: "#D0E0D0",
   },
   deviceButtonText: {
-    fontSize: 10,
-    fontWeight: "400",
-    fontFamily: "Roboto",
+    fontSize: 12,
+    color: "#4A634A",
   },
-  deviceButtonTextActive: {
-    color: "#3E5842",
-  },
-  deviceButtonTextInactive: {
-    color: "#3E5842",
-  },
-  plantMetrics: {
+  metricsRow: {
     flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingVertical: 8,
-    gap: 16,
+    justifyContent: 'flex-start',
+    gap: 20,
   },
   metricItem: {
     alignItems: "center",
   },
-  metricIconContainer: {
-    backgroundColor: "#f8fafc",
-    borderRadius: 24,
-    padding: 12,
+  metricIconCircle: {
+    backgroundColor: "#EFF5EF",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 6,
   },
   metricValue: {
-    fontSize: 12,
-    fontWeight: "400",
-    color: "#1a3c2a",
-    fontFamily: "Inter",
+    fontSize: 13,
+    color: "#333",
   },
   waitingText: {
-    textAlign: "center",
-    fontSize: 14,
-    color: "#9ca3af",
     fontStyle: "italic",
     marginTop: 8,
-    fontFamily: "Inter",
   },
 });

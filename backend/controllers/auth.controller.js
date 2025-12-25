@@ -1,299 +1,334 @@
-const AuthRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const passport = require("passport");
-const nodemailer = require("nodemailer");
-const UserModel = require("../models/auth.model.js");
-const { verifyToken } = require("../middleware/auth.middleware.js");
+const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
+const User = require("../models/auth.model");
+const generateToken = require("../utils/generateToken");
+const sendEmail = require("../utils/sendEmail");
 
+// Google OAuth Client
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-//Get route to check if the server is running
-AuthRouter.get("/", async (_, res) => {
-  await UserModel.find();
-  return res.status(200).json({
-    message: "Authentication API is operational",
-    success: true,
-  });
-});
+/* ============================================================
+   GOOGLE LOGIN (MOBILE/APP)
+============================================================ */
+exports.googleMobileLogin = async (req, res) => {
+  try {
+    const { idToken } = req.body;
 
-//register
-AuthRouter.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({
-      message: "All fields are required: name, email, and password",
+    if (!idToken) {
+      return res.status(400).json({ success: false, message: "ID Token is required" });
+    }
+
+    // Verify Google ID Token
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub: googleId } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user if they don't exist
+      user = await User.create({
+        name,
+        email,
+        avatar: picture,
+        googleId,
+        authProvider: "google",
+        // Password not required for Google users
+      });
+    } else {
+      // Update existing user's Google info
+      user.googleId = googleId;
+      user.authProvider = "google";
+      if (!user.avatar) user.avatar = picture;
+      await user.save();
+    }
+
+    // Generate our JWT token
+    const token = generateToken(user._id);
+
+    return res.json({
+      success: true,
+      message: "Google login successful",
+      token,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    return res.status(401).json({
       success: false,
+      message: "Invalid Google token",
     });
   }
+};
 
+/* ============================================================
+   REGISTER USER (LOCAL AUTH)
+============================================================ */
+exports.register = async (req, res) => {
   try {
-    const existingUser = await UserModel.findOne({ email: req.body.email });
+    const { name, email, password } = req.body;
+
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and password are required",
+      });
+    }
+
+    // Check existing user
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
-        message: "Email already exists",
         success: false,
+        message: "Email already registered",
       });
     }
 
-    const hashedpassowrd = await bcrypt.hash(req.body.password, 10);
-    req.body.password = hashedpassowrd;
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await UserModel.create(req.body);
-
-    // Generate token for auto-login after registration
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES,
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      authProvider: "local",
     });
+
+    // Generate token
+    const token = generateToken(user._id);
 
     return res.status(201).json({
-      message: "Register successfully",
       success: true,
+      message: "User registered successfully",
+      token,
       data: {
         id: user._id,
         name: user.name,
         email: user.email,
       },
-      token: token,
     });
   } catch (error) {
+    console.error("Register error:", error);
     return res.status(500).json({
-      message: "Account creation failed due to server error",
       success: false,
-      error: error.message,
+      message: "Server error during registration",
     });
   }
-});
+};
 
-//login
-AuthRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({
-      message: "Both email and password are required",
-      success: false,
-    });
-  }
-
+/* ============================================================
+   LOGIN USER (LOCAL AUTH)
+============================================================ */
+exports.login = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email }).select("+password");
+    const { email, password } = req.body;
+
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    // Find user (include password)
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email or password" });
+    }
+
+    // Compare password
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email or password" });
+    }
+
+    user.lastLogin = Date.now();
+    await user.save();
+
+    const token = generateToken(user._id);
+
+    return res.json({
+      success: true,
+      message: "Login successful",
+      token,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar || null,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error during login",
+    });
+  }
+};
+
+/* ============================================================
+   UPDATE PUSH TOKEN
+============================================================ */
+exports.updatePushToken = async (req, res) => {
+  try {
+    const { pushToken } = req.body;
+    await User.findByIdAndUpdate(req.user.id, { pushToken });
+    res.json({ success: true, message: "Push token updated" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* ============================================================
+   GET CURRENT USER
+============================================================ */
+exports.getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* ============================================================
+   UPDATE PROFILE
+============================================================ */
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true }).select("-password");
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* ============================================================
+   FORGOT PASSWORD
+============================================================ */
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Always return success to prevent email enumeration
+      return res.json({
+        success: true,
+        message: "If the email exists, reset link sent",
+      });
+    }
+
+    // Create reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes
+    await user.save();
+
+    const resetUrl = `${
+      process.env.FRONTEND_URL
+    }/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+
+    // Send email
+    await sendEmail({
+      to: email,
+      subject: "Plant Care App — Password Reset",
+      text: `Reset your password using this link:\n\n${resetUrl}`,
+    });
+
+    return res.json({
+      success: true,
+      message: "Password reset email sent",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to process password reset request",
+    });
+  }
+};
+
+/* ============================================================
+   RESET PASSWORD
+============================================================ */
+exports.resetPassword = async (req, res) => {
+  try {
+    const email = req.body?.email;
+    const resetToken = req.body?.resetToken;
+    const newPassword = req.body?.newPassword;
+
+    if (!email || !resetToken || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, resetToken, and newPassword are required",
+      });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetToken,
+      resetTokenExpiry: { $gt: Date.now() },
+    });
+
     if (!user) {
       return res.status(400).json({
-        message: "Invalid login credentials",
         success: false,
+        message: "Invalid or expired reset token",
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({
-        message: "Invalid Password",
-        success: false,
-      });
-    }
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
 
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES,
-    });
+    await user.save();
 
-    return res.status(200).json({
-      message: "Login successful",
+    return res.json({
       success: true,
-      data: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-      token: token,
+      message: "Password reset successful",
     });
   } catch (error) {
+    console.error("RESET ERROR >>>", error); 
+
     return res.status(500).json({
-      message: "Authentication service unavailable",
       success: false,
+      message: "Server error during password reset",
       error: error.message,
     });
   }
-});
+};
 
-//logout
-AuthRouter.post("/logout", verifyToken, async (req, res) => {
+/* ============================================================
+   LOGOUT
+============================================================ */
+exports.logout = async (req, res) => {
   try {
-    const _id = req.user.id;
-    await UserModel.updateOne({ _id }, { $set: { refreshToken: null } });
-    return res.status(200).json({
-      message: "Logged out successfully",
-      success: true,
-    });
+    // For JWT based logout, client-side token deletion is usually enough.
+    // Here we can clear refresh tokens if implemented or just return success.
+    res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
-    console.error("Error logging out:", error);
-    return res.status(500).json({
-      message: "Internal server error",
-      success: false,
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
-});
-
-//forgot-password
-// AuthRouter.post("/forgot-password", async (req, res) => {
-//   const { email } = req.body;
-
-//   if (!email) {
-//     return res.status(400).json({
-//       message: "Email is required",
-//       success: false,
-//     });
-//   }
-
-//   try {
-//     const user = await UserModel.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({
-//         message: "User not found",
-//         success: false,
-//       });
-//     }
-
-//     // 🔐 Create reset token
-//     const resetToken = crypto.randomBytes(32).toString("hex");
-
-//     user.resetPasswordToken = crypto
-//       .createHash("sha256")
-//       .update(resetToken)
-//       .digest("hex");
-
-//     user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 mins
-//     await user.save({ validateBeforeSave: false });
-
-//     const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-
-//     // 📧 Mail
-//     const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//       },
-//     });
-
-//     await transporter.sendMail({
-//       to: user.email,
-//       subject: "Password Reset",
-//       html: `
-//         <p>You requested password reset</p>
-//         <p>Click below link:</p>
-//         <a href="${resetURL}">${resetURL}</a>
-//       `,
-//     });
-
-//     return res.status(200).json({
-//       message: "Reset link sent to email",
-//       success: true,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: "Forgot password failed",
-//       success: false,
-//       error: error.message,
-//     });
-//   }
-// });
-
-//reset-password
-// AuthRouter.post("/reset-password/:token", async (req, res) => {
-//   const { password } = req.body;
-
-//   if (!password) {
-//     return res.status(400).json({
-//       message: "Password is required",
-//       success: false,
-//     });
-//   }
-
-//   try {
-//     const hashedToken = crypto
-//       .createHash("sha256")
-//       .update(req.params.token)
-//       .digest("hex");
-
-//     const user = await UserModel.findOne({
-//       resetPasswordToken: hashedToken,
-//       resetPasswordExpire: { $gt: Date.now() },
-//     });
-
-//     if (!user) {
-//       return res.status(400).json({
-//         message: "Invalid or expired token",
-//         success: false,
-//       });
-//     }
-
-//     user.password = await bcrypt.hash(password, 10);
-//     user.resetPasswordToken = undefined;
-//     user.resetPasswordExpire = undefined;
-
-//     await user.save();
-
-//     return res.status(200).json({
-//       message: "Password reset successful",
-//       success: true,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: "Reset password failed",
-//       success: false,
-//       error: error.message,
-//     });
-//   }
-// });
-
-// Google login
-// AuthRouter.get(
-//   "/google",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
-
-// Google callback
-// AuthRouter.get(
-//   "/google/callback",
-//   passport.authenticate("google", { session: false }),
-//   (req, res) => {
-//     const token = jwt.sign(
-//       { id: req.user._id },
-//       process.env.JWT_SECRET,
-//       { expiresIn: process.env.JWT_EXPIRES }
-//     );
-
-//     res.redirect(
-//       `${process.env.FRONTEND_URL}/oauth-success?token=${token}`
-//     );
-//   }
-// );
-
-//get user by id
-// AuthRouter.get("/user/:id", async (req, res) => {
-//   try {
-//     const user = await UserModel.findById(req.params.id);
-//     if (!user) {
-//       return res.status(404).json({
-//         message: "User not found",
-//         success: false,
-//       });
-//     }
-//     return res.status(200).json({
-//       message: "User found",
-//       success: true,
-//       data: user,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: "Failed to retrieve user",
-//       success: false,
-//       error: error.message,
-//     });
-//   }
-// });
-
-module.exports = AuthRouter;
+};

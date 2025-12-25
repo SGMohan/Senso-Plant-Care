@@ -1,67 +1,55 @@
-# Senso Plant Care - Setup Guide
+# Senso Plant Care 🌿
+
+Senso Plant Care is an IoT-enabled MERN stack application designed to help users monitor and care for their plants through real-time sensor data and automated care suggestions.
+
+## 🏗️ Project Structure
+
+The project is divided into two main parts:
+
+- **[Backend](./backend)**: Node.js/Express server handling authentication, database management, and AWS IoT integration.
+- **[Frontend](./frontend)**: React Native (Expo) mobile application for users to interact with their plants and view data.
 
 ## 🚀 Quick Start
 
-### 1. Start Both Servers
+### Prerequisites
+- Node.js & npm installed
+- MongoDB instance (local or Atlas)
+- AWS IoT Core setup (for sensor integration)
+
+### Running the Project
+
+The easiest way to start both servers is using the provided batch script:
 ```bash
-# Option 1: Use the batch file (Windows)
-start-servers.bat
+./start-servers.bat
+```
 
-# Option 2: Manual start
-# Terminal 1 - Backend
+Or manually:
+
+**Backend:**
+```bash
 cd backend
+npm install
 npm run dev
+```
 
-# Terminal 2 - Frontend  
+**Frontend:**
+```bash
 cd frontend
+npm install
 npm start
 ```
 
-### 2. Access the App
-- **Backend API**: http://192.168.1.3:3000
-- **Frontend Dev**: http://192.168.1.3:8081
-- **Mobile**: Scan QR code with Expo Go app
+## 🛠️ Key Features
+- **IoT Integration**: Real-time monitoring of soil moisture, temperature, and light.
+- **Device Shadowing**: Control and monitor device states via AWS IoT Shadow.
+- **Plant Management**: Add, update, and track multiple plants.
+- **Health Tracking**: Visualizations and status updates for plant health.
+- **Cross-Platform**: Mobile app works on both Android and iOS.
 
-## 📱 Mobile Testing
+## 📖 Documentation
+Detailed documentation for each component can be found in their respective directories:
+- [Backend Documentation](./backend/README.md)
+- [Frontend Documentation](./frontend/README.md)
 
-### iOS Testing
-1. Install Expo Go from App Store
-2. Scan QR code from terminal
-3. App will load with backend connectivity
-
-### Android Testing
-1. Install Expo Go from Play Store
-2. Scan QR code from terminal
-3. App will load with backend connectivity
-
-## 🔧 Network Configuration
-
-### Current Setup
-- **Backend**: Listens on `0.0.0.0:3000` (all network interfaces)
-- **Frontend**: Connects to `192.168.1.3:3000`
-- **CORS**: Configured for mobile development
-- **Timeout**: 10 seconds for network requests
-
-### Troubleshooting
-If you get network errors:
-1. Check your local IP: `ipconfig` (Windows) or `ifconfig` (Mac/Linux)
-2. Update `.env` files with your IP address
-3. Restart both servers
-4. Ensure firewall allows connections on port 3000
-
-## ✅ Features Working
-- ✅ User Registration
-- ✅ User Login  
-- ✅ JWT Authentication
-- ✅ Cross-platform (iOS/Android)
-- ✅ Network connectivity
-- ✅ Error handling
-- ✅ Loading states
-
-## 🔄 Development Workflow
-1. Make changes to code
-2. App will hot reload automatically
-3. Backend changes require server restart
-4. Test on both iOS and Android devices
-
-Ready for full app development! 🌱
+---
+Developed for plant enthusiasts and tech lovers. 🌱

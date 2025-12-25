@@ -1,89 +1,88 @@
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db.js');
-const dotenv = require('dotenv');
-const AuthRouter = require('./controllers/auth.controller.js');
-const PlantRouter = require('./controllers/plant.controller.js');
-const PlantConversationRouter = require('./controllers/plantconversation.controller.js');
-const { GoogleAuth } = require('google-auth-library');
+// ============================================
+// 1. Load environment variables
+// ============================================
+require("dotenv").config();
 
-dotenv.config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db.js");
 
+// ============================================
+// 2. Import Routers
+// ============================================
+const AuthRouter = require("./routes/auth.routes.js");
+const WifiRouter = require("./routes/wifi.routes.js");
+const DeviceRouter = require("./routes/device.routes.js");
+const PlantRouter = require("./routes/plant.routes.js");
+const NotificationRouter = require("./routes/notification.routes.js");
 
-connectDB();
-
-
+// ============================================
+// 3. Initialize Express App
+// ============================================
 const app = express();
 
+// ============================================
+// 4. Connect to MongoDB
+// ============================================
+connectDB();
 
-// CORS must come before routes
-app.use(cors({
-  origin: [
-    'http://localhost:8081',
-    'http://192.168.1.3:8081', 
-    'exp://192.168.1.3:8081',
-    'exp://localhost:8081',
-    /^exp:\/\/.*$/,  // Allow all Expo origins
-    /^http:\/\/192\.168\..*$/,  // Allow all local network IPs
-    /^http:\/\/10\..*$/,  // Allow 10.x.x.x network
-    /^http:\/\/172\..*$/  // Allow 172.x.x.x network
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// ============================================
+// 5. Global Middlewares
+// ============================================
 
-app.use(express.json({ limit: '50mb' }));
+// Setting security headers to allow window.close() after Google OAuth on Web
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
+
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-//Routes
+app.use(
+  cors({
+    origin: [
+      "http://localhost:8081",
+      "http://192.168.1.3:8081",
+      "http://192.168.1.4:8081",
+      "exp://localhost:8081",
+      /^exp:\/\/.*/, // Expo Go (LAN)
+      /^http:\/\/192\.168\..*/, // Your LAN IPs
+      /^http:\/\/10\..*/, // Hotspot networks
+      /^http:\/\/172\..*/, // Company / subnet
+    ],
+    credentials: true,
+  })
+);
+
+// ============================================
+// 6. Enable MQTT Listener (IoT Real-time Handling)
+// ============================================
+require("./utils/mqttClient.js");
+
+// ============================================
+// 7. API Routes
+// ============================================
 app.use("/api/auth", AuthRouter);
-// app.use("/api/plant", PlantRouter);
-// app.use("/plant", PlantConversationRouter);
+app.use("/api/wifi", WifiRouter);
+app.use("/api/device", DeviceRouter);
+app.use("/api/plant", PlantRouter);
+app.use("/api/notification", NotificationRouter);
 
-// Start the server
-app.listen(process.env.PORT, process.env.HOSTNAME, () => {
-  console.log(`http://${process.env.HOSTNAME}:${process.env.PORT}`);
-});
-
-app.get("/", (_, res) => {
-  return res.status(200).json({
-    message: "Welcome to the Senso Plant Care API",
+// ============================================
+// 8. Root Route (Health Check)
+// ============================================
+app.get("/", (req, res) => {
+  res.json({
     success: true,
-    timestamp: new Date().toISOString()
+    message: "🌱 Senso Plant Backend Running with IoT + Auth 🚀",
   });
 });
 
-app.get("/api", (_, res) => {
-  return res.status(200).json({
-    message: "Senso Plant Care API v1.0",
-    success: true,
-    endpoints: {
-      auth: "/api/auth",
-      register: "/api/auth/register",
-      login: "/api/auth/login",
-      logout: "/api/auth/logout",
-      // forgotPassword: "/api/auth/forgot-password",
-      // resetPassword: "/api/auth/reset-password/:token",
-      // googleAuth: "/api/auth/google",
-      // googleCallback: "/api/auth/google/callback",
-      // plant: "/api/plant",
-      // identify: "/api/plant/identify"
-    }
-  });
+// ============================================
+// 9. Start Server
+// ============================================
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
-
-// Error handling middleware (must be last)
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({
-    message: 'Internal server error',
-    success: false,
-    error: err.message
-  });
-});
-
-
-
-
-

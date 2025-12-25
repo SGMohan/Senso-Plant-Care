@@ -114,3 +114,10 @@ secrets/
 *.backup
 *.bak
 *.orig
+
+
+# AWS IoT certificates
+certs/
+*.pem
+*.crt
+*.key

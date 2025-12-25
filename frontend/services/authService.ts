@@ -1,90 +1,83 @@
-// Authentication service for API calls
-const API_BASE_URL = 'http://192.168.1.3:3000/api/auth';
+import * as WebBrowser from "expo-web-browser";
 
-export interface LoginRequest {
+WebBrowser.maybeCompleteAuthSession();
+
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+
+const handleFetch = async (url: string, options: any) => {
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Something went wrong");
+    return data;
+  } catch (error: any) {
+    if (error.message === 'Network request failed') {
+      throw new Error("Unable to connect to server. Please check your internet connection and ensure the backend is running.");
+    }
+    throw error;
+  }
+};
+
+/* --------------------------------------------------
+   NORMAL LOGIN
+---------------------------------------------------*/
+export const loginUser = async (credentials: {
   email: string;
   password: string;
-}
+}) => {
+  return handleFetch(`${API_BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+};
 
-export interface RegisterRequest {
+/* --------------------------------------------------
+   NORMAL REGISTER
+---------------------------------------------------*/
+export const registerUser = async (userData: {
   name: string;
   email: string;
   password: string;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  data?: {
-    id: string;
-    name: string;
-    email: string;
-    avatar?: string;
-  };
-  token?: string;
-}
-
-
-
-
-
-// Login user
-export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
-  const response = await fetch(`${API_BASE_URL}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-  });
-
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || 'Login failed');
-  }
-  
-  return data;
-};
-
-// Register user
-export const registerUser = async (userData: RegisterRequest): Promise<AuthResponse> => {
-  const response = await fetch(`${API_BASE_URL}/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+}) => {
+  return handleFetch(`${API_BASE_URL}/api/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
-
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || 'Registration failed');
-  }
-  
-  return data;
 };
 
+/* --------------------------------------------------
+   FORGOT PASSWORD
+---------------------------------------------------*/
+export const forgotPassword = async (email: string) => {
+  return handleFetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+};
 
+/* --------------------------------------------------
+   GOOGLE LOGIN
+---------------------------------------------------*/
+export const googleBackendLogin = async (idToken: string) => {
+  return handleFetch(`${API_BASE_URL}/api/auth/google/mobile-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idToken }),
+  });
+};
 
-
-
-// Logout user
-export const logoutUser = async (token: string): Promise<AuthResponse> => {
-  const response = await fetch(`${API_BASE_URL}/logout`, {
-    method: 'POST',
+/* --------------------------------------------------
+   LOGOUT
+---------------------------------------------------*/
+export const logoutUser = async (token: string) => {
+  return handleFetch(`${API_BASE_URL}/api/auth/logout`, {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
-
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || 'Logout failed');
-  }
-  
-  return data;
 };
